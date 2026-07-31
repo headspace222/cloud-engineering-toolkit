@@ -1,0 +1,2253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Cloud Engineering Toolkit</title>
+<meta name="description" content="A free browser-based toolkit for cloud engineers. Azure, AWS, GCP, IaC, CIDR, Kubernetes, scripting, and multi-cloud reference."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:     #1C2333; --bg2: #232D3F; --bg3: #1A2030;
+  --ink:    #F1F5F9; --ink2: #CBD5E1; --ink3: #94A3B8; --ink4: #64748B;
+  --sky:    #38BDF8; --sky2: #7DD3FC; --sky3: rgba(56,189,248,.10);
+  --border: #334155; --border2: #2D3748;
+  --aws:    #FF9900; --aws-bg: rgba(255,153,0,.10);
+  --gcp:    #4285F4; --gcp-bg: rgba(66,133,244,.10);
+  --az:     #0078D4; --az-bg:  rgba(0,120,212,.10);
+  --green:  #34D399; --green-bg: rgba(52,211,153,.10);
+  --purple: #A78BFA; --purple-bg: rgba(167,139,250,.10);
+  --amber:  #FBBF24; --amber-bg: rgba(251,191,36,.10);
+  --red:    #F87171; --red-bg:   rgba(248,113,113,.10);
+  --teal:   #6EE7B7; --teal-bg:  rgba(110,231,183,.10);
+  --serif:  'Playfair Display',Georgia,serif;
+  --sans:   'IBM Plex Sans',system-ui,sans-serif;
+  --mono:   'IBM Plex Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.65;min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,0.018) 2px,rgba(255,255,255,0.018) 4px);pointer-events:none;z-index:0;}
+.page{position:relative;z-index:1;max-width:1300px;margin:0 auto;padding:0 24px;}
+
+/* MASTHEAD */
+.masthead{border-bottom:3px double #2E3A50;padding:26px 0 0;}
+.mast-tag{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#CBD5E1;text-align:center;padding:5px 0;border-top:1px solid var(--border2);border-bottom:1px solid var(--border2);margin-bottom:18px;}
+.mast-body{display:grid;grid-template-columns:1fr auto 1fr;align-items:start;gap:24px;padding-bottom:22px;}
+.mast-left{font-family:var(--mono);font-size:11px;color:#CBD5E1;line-height:1.9;}
+.mast-left strong{color:#F1F5F9;}
+.mast-center{text-align:center;}
+.mast-center h1{font-family:var(--serif);font-size:clamp(1.8rem,4vw,3rem);font-weight:900;color:var(--ink);line-height:1.06;letter-spacing:-.01em;}
+.mast-center h1 em{font-style:italic;color:var(--sky);}
+.mast-sub{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--sky2);margin-top:6px;}
+.stamp{width:104px;height:104px;border-radius:50%;border:3px solid var(--sky);background:var(--bg);box-shadow:inset 0 0 0 4px var(--bg),inset 0 0 0 6px var(--sky);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:14px auto 0;position:relative;}
+.stamp::before{content:'';position:absolute;inset:8px;border:1px dashed rgba(56,189,248,.4);border-radius:50%;}
+.stamp-lbl{font-family:var(--mono);font-size:7.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--sky2);margin-top:4px;}
+.mast-right{font-family:var(--mono);font-size:11px;color:#CBD5E1;line-height:1.9;text-align:right;}
+.cloud-pills{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;justify-content:flex-end;}
+.cloud-pill{font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:3px;font-weight:600;}
+.pill-aws{background:var(--aws-bg);border:1px solid var(--aws);color:var(--aws);}
+.pill-gcp{background:var(--gcp-bg);border:1px solid var(--gcp);color:#6BA3FF;}
+.pill-az{background:var(--az-bg);border:1px solid var(--az);color:#60A5FA;}
+.pill-k8s{background:var(--teal-bg);border:1px solid var(--teal);color:var(--teal);}
+.pill-iac{background:var(--purple-bg);border:1px solid var(--purple);color:var(--purple);}
+
+/* TOOLBAR */
+.toolbar{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #2E3A50;flex-wrap:wrap;}
+.search-wrap{position:relative;min-width:180px;max-width:280px;flex:1;}
+.search-wrap svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--ink4);pointer-events:none;}
+#search{width:100%;background:var(--bg3);border:1px solid var(--border);padding:7px 9px 7px 30px;font-family:var(--mono);font-size:12px;color:var(--ink);outline:none;transition:border-color .15s;border-radius:3px;}
+#search:focus{border-color:var(--sky);}
+#search::placeholder{color:var(--ink4);}
+.nav-tabs{display:flex;flex-wrap:wrap;list-style:none;gap:4px;padding:3px 0;}
+.nav-tab{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;cursor:pointer;color:var(--ink4);border:1px solid var(--border2);border-radius:4px;transition:all .15s;white-space:nowrap;background:var(--bg3);}
+.nav-tab:hover{color:var(--ink2);background:var(--bg2);border-color:var(--border);}
+.nav-tab.active{font-weight:600;border-color:transparent;color:#0F172A;}
+.nav-tab[data-tab="featured"].active{background:#38BDF8;}
+.nav-tab[data-tab="multicloud"].active{background:#A78BFA;}
+.nav-tab[data-tab="networking"].active{background:#34D399;}
+.nav-tab[data-tab="iac"].active{background:#60A5FA;}
+.nav-tab[data-tab="k8s"].active{background:#6EE7B7;}
+.nav-tab[data-tab="scripting"].active{background:#FBBF24;}
+.nav-tab[data-tab="cost"].active{background:#F87171;}
+.nav-tab[data-tab="ref"].active{background:#94A3B8;}
+.nav-tab[data-tab="about"].active{background:#CBD5E1;}
+.nav-tab[data-tab="featured"]:hover{border-color:#38BDF8;color:#38BDF8;}
+.nav-tab[data-tab="multicloud"]:hover{border-color:#A78BFA;color:#A78BFA;}
+.nav-tab[data-tab="networking"]:hover{border-color:#34D399;color:#34D399;}
+.nav-tab[data-tab="iac"]:hover{border-color:#60A5FA;color:#60A5FA;}
+.nav-tab[data-tab="k8s"]:hover{border-color:#6EE7B7;color:#6EE7B7;}
+.nav-tab[data-tab="scripting"]:hover{border-color:#FBBF24;color:#FBBF24;}
+.nav-tab[data-tab="cost"]:hover{border-color:#F87171;color:#F87171;}
+.nav-tab[data-tab="ref"]:hover{border-color:#94A3B8;color:#94A3B8;}
+.nav-tab[data-tab="about"]:hover{border-color:#CBD5E1;color:#CBD5E1;}
+.nav-tab .ct{font-size:9px;background:rgba(255,255,255,.12);border-radius:8px;padding:0 5px;margin-left:4px;color:inherit;font-weight:700;}
+
+/* SECTION */
+main{padding:28px 0 80px;}
+.section{display:none;}
+.section.active{display:block;}
+.sec-head{margin-bottom:22px;}
+.sec-title{font-family:var(--serif);font-size:1.4rem;font-weight:700;color:var(--ink);padding-bottom:8px;border-bottom:1px solid #2E3A50;display:flex;align-items:baseline;gap:12px;}
+#tab-featured .sec-title{border-bottom-color:#38BDF8;}
+#tab-multicloud .sec-title{border-bottom-color:#A78BFA;}
+#tab-networking .sec-title{border-bottom-color:#34D399;}
+#tab-iac .sec-title{border-bottom-color:#60A5FA;}
+#tab-k8s .sec-title{border-bottom-color:#6EE7B7;}
+#tab-scripting .sec-title{border-bottom-color:#FBBF24;}
+#tab-cost .sec-title{border-bottom-color:#F87171;}
+#tab-ref .sec-title{border-bottom-color:#94A3B8;}
+#tab-about .sec-title{border-bottom-color:#CBD5E1;}
+.sec-vol{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink4);font-weight:400;}
+.sec-desc{font-size:13px;color:var(--ink3);margin-top:7px;}
+.group{margin-bottom:32px;}
+.group-label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.group-label::after{content:'';flex:1;height:1px;background:var(--border2);}
+
+/* CARDS */
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:10px;}
+.tool-card{background:var(--bg2);border:1px solid var(--border2);padding:16px 18px;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s;position:relative;overflow:hidden;border-radius:4px;}
+.tool-card::after{content:'';position:absolute;top:0;left:0;width:100%;height:3px;background:var(--sky);transform:scaleX(0);transform-origin:left;transition:transform .2s;}
+.tool-card::before{content:'expand';position:absolute;bottom:10px;right:12px;font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink4);opacity:0;transition:opacity .2s;}
+.tool-card:hover{border-color:var(--sky);box-shadow:0 4px 20px rgba(56,189,248,.12);transform:translateY(-1px);}
+.tool-card:hover::after{transform:scaleX(1);}
+.tool-card:hover::before{opacity:1;}
+.tool-card.open-card{border-color:var(--sky);border-top-color:var(--sky);}
+.tool-card.hidden{display:none;}
+.tool-header{display:flex;align-items:flex-start;gap:11px;margin-bottom:8px;}
+.tool-icon{width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;background:var(--bg3);border:1px solid var(--border2);border-radius:4px;}
+.tool-name{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--ink);line-height:1.3;}
+.tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:3px;}
+.tag{display:inline-block;font-family:var(--mono);font-size:8.5px;letter-spacing:.06em;text-transform:uppercase;padding:1px 5px;border-radius:2px;border:1px solid;}
+.tag-aws{border-color:var(--aws);color:var(--aws);background:var(--aws-bg);}
+.tag-gcp{border-color:#6BA3FF;color:#6BA3FF;background:var(--gcp-bg);}
+.tag-az{border-color:#60A5FA;color:#60A5FA;background:var(--az-bg);}
+.tag-k8s{border-color:var(--teal);color:var(--teal);background:var(--teal-bg);}
+.tag-iac{border-color:var(--purple);color:var(--purple);background:var(--purple-bg);}
+.tag-net{border-color:var(--green);color:var(--green);background:var(--green-bg);}
+.tag-cost{border-color:var(--amber);color:var(--amber);background:var(--amber-bg);}
+.tag-bash{border-color:#94A3B8;color:#94A3B8;background:rgba(148,163,184,.10);}
+.tag-ps{border-color:#60A5FA;color:#60A5FA;background:var(--az-bg);}
+.tag-py{border-color:var(--amber);color:var(--amber);background:var(--amber-bg);}
+.tool-desc{font-size:12px;color:#B0BEC5;line-height:1.55;}
+
+/* PANEL */
+.tool-panel{display:none;margin-top:11px;background:var(--bg3);border:1px solid var(--border);border-top:2px solid var(--sky);padding:18px;position:relative;border-radius:0 0 4px 4px;}
+.tool-panel.open{display:block;}
+.panel-close{position:absolute;top:10px;right:10px;background:var(--bg2);border:1px solid var(--border);color:var(--ink3);font-size:13px;cursor:pointer;padding:1px 7px;font-family:var(--mono);border-radius:3px;}
+.panel-close:hover{border-color:var(--sky);color:var(--sky);}
+.panel-title{font-family:var(--mono);font-size:10px;color:var(--sky2);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;padding-bottom:7px;border-bottom:1px dashed var(--border);}
+
+/* CLOUD TABS inside panels */
+.cloud-tabs{display:flex;gap:3px;margin-bottom:14px;flex-wrap:wrap;}
+.ctab{font-family:var(--mono);font-size:10px;padding:4px 10px;cursor:pointer;border-radius:3px;border:1px solid var(--border2);color:var(--ink4);background:var(--bg2);transition:all .12s;}
+.ctab.active-aws{background:var(--aws-bg);border-color:var(--aws);color:var(--aws);}
+.ctab.active-gcp{background:var(--gcp-bg);border-color:#6BA3FF;color:#6BA3FF;}
+.ctab.active-az{background:var(--az-bg);border-color:#60A5FA;color:#60A5FA;}
+.ctab.active-all{background:var(--sky3);border-color:var(--sky);color:var(--sky);}
+.cloud-pane{display:none;}
+.cloud-pane.visible{display:block;}
+
+/* FIELDS */
+.field{margin-bottom:11px;}
+.field label{display:block;font-size:10px;font-family:var(--mono);color:var(--ink3);margin-bottom:4px;letter-spacing:.05em;text-transform:uppercase;}
+.field input,.field select,.field textarea{width:100%;background:var(--bg);border:1px solid var(--border);padding:7px 10px;font-size:12px;font-family:var(--mono);color:var(--ink);outline:none;transition:border-color .15s;border-radius:3px;}
+.field textarea{resize:vertical;min-height:76px;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--sky);}
+.field select option{background:var(--bg3);}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.field-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 15px;border:none;cursor:pointer;font-size:11px;font-weight:600;font-family:var(--mono);letter-spacing:.05em;text-transform:uppercase;transition:background .12s;border-radius:3px;white-space:nowrap;}
+.btn-primary{background:var(--sky);color:#0F172A;}
+.btn-primary:hover{background:var(--sky2);}
+.btn-ghost{background:var(--bg2);color:var(--ink3);border:1px solid var(--border);}
+.btn-ghost:hover{border-color:var(--border);color:var(--ink);background:var(--bg);}
+.btn-aws{background:var(--aws-bg);color:var(--aws);border:1px solid var(--aws);}
+.btn-aws:hover{background:rgba(255,153,0,.2);}
+.btn-gcp{background:var(--gcp-bg);color:#6BA3FF;border:1px solid #6BA3FF;}
+.btn-gcp:hover{background:rgba(66,133,244,.2);}
+.btn-az{background:var(--az-bg);color:#60A5FA;border:1px solid #60A5FA;}
+.btn-az:hover{background:rgba(0,120,212,.2);}
+.btn-row{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap;}
+
+/* OUTPUT */
+.output{margin-top:12px;background:#0D1520;border:1px solid var(--border);border-left:3px solid var(--sky);padding:12px 14px;font-family:var(--mono);font-size:11.5px;color:#BDD4E8;white-space:pre-wrap;word-break:break-all;max-height:360px;overflow-y:auto;line-height:1.75;display:none;border-radius:0 3px 3px 0;}
+.output.visible{display:block;}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:7px;margin:10px 0;}
+.stat-card{background:var(--bg);border:1px solid var(--border);padding:9px 11px;border-radius:3px;}
+.stat-lbl{font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:.07em;text-transform:uppercase;margin-bottom:3px;}
+.stat-val{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--sky);}
+
+
+.card-cta{display:flex;align-items:center;gap:6px;margin-top:10px;padding-top:9px;border-top:1px solid var(--border2);font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--sky);opacity:.7;transition:opacity .15s;}
+.tool-card:hover .card-cta{opacity:1;}
+.cta-arrow{transition:transform .15s;display:inline-block;}
+.tool-card:hover .cta-arrow{transform:translateX(3px);}
+.tool-panel.open ~ .card-cta,.card-cta.hidden{display:none;}
+/* COMPARE TABLE */
+.cmp-table{width:100%;border-collapse:collapse;font-size:11.5px;margin-top:10px;}
+.cmp-table th{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:8px 10px;border-bottom:2px solid var(--border);text-align:left;}
+.cmp-table th:nth-child(1){color:var(--ink3);}
+.cmp-table th:nth-child(2){color:#60A5FA;}
+.cmp-table th:nth-child(3){color:var(--aws);}
+.cmp-table th:nth-child(4){color:#6BA3FF;}
+.cmp-table td{padding:8px 10px;border-bottom:1px solid var(--border2);font-family:var(--mono);color:var(--ink2);vertical-align:top;}
+.cmp-table td:first-child{color:var(--sky);font-weight:600;}
+.cmp-table tr:last-child td{border-bottom:none;}
+.cmp-table tr:hover td{background:rgba(255,255,255,.02);}
+
+/* REFERENCE TABLES */
+.tbl-wrap{border:1px solid var(--border);overflow:hidden;border-radius:4px;}
+.ref-table{width:100%;border-collapse:collapse;font-size:12px;}
+.ref-table th{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--sky2);text-align:left;padding:8px 11px;border-bottom:2px solid var(--border);background:var(--bg3);}
+.ref-table td{padding:8px 11px;border-bottom:1px solid var(--border2);font-family:var(--mono);color:#B0BEC5;vertical-align:top;}
+.ref-table td:first-child{color:#38BDF8;font-weight:600;}
+.ref-table tr:last-child td{border-bottom:none;}
+.ref-table tr:hover td{background:rgba(255,255,255,.025);}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
+.about-block h3{font-family:var(--serif);font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.skill-list{list-style:none;display:flex;flex-direction:column;gap:6px;}
+.skill-list li{font-family:var(--mono);font-size:12px;color:#B0BEC5;display:flex;align-items:flex-start;gap:7px;line-height:1.5;}
+.skill-list li::before{content:'>';color:var(--sky);font-size:10px;margin-top:2px;flex-shrink:0;}
+
+/* FOOTER */
+footer{border-top:3px double #2E3A50;padding:24px 0 16px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;}
+.ft-left{font-family:var(--mono);font-size:11px;color:var(--ink3);line-height:1.85;}
+.ft-left a{color:var(--sky);text-decoration:none;}
+.ft-left a:hover{text-decoration:underline;}
+.ft-center{text-align:center;}
+.ft-mark{font-family:var(--serif);font-size:22px;font-weight:900;font-style:italic;color:var(--sky);}
+.ft-tagline{font-family:var(--mono);font-size:9.5px;color:var(--ink4);margin-top:3px;letter-spacing:.06em;}
+.ft-right{font-family:var(--mono);font-size:11px;color:var(--ink3);text-align:right;line-height:1.85;}
+
+/* TOAST */
+#toast{position:fixed;bottom:20px;right:20px;background:#0D1520;border:1px solid var(--sky);color:var(--ink);font-family:var(--mono);font-size:11px;padding:8px 14px;z-index:9999;opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s;pointer-events:none;border-radius:3px;}
+#toast.show{opacity:1;transform:translateY(0);}
+
+@media(max-width:900px){.mast-body{grid-template-columns:1fr;text-align:center;}.cloud-pills{justify-content:center;}.mast-right{text-align:left;}.about-grid{grid-template-columns:1fr;}footer{grid-template-columns:1fr;}.ft-right{text-align:left;}}
+@media(max-width:580px){.field-row,.field-row3{grid-template-columns:1fr;}.tools-grid{grid-template-columns:1fr;}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="page">
+<header class="masthead">
+  <div class="mast-tag">Cloud Engineering Toolkit &nbsp;·&nbsp; Azure · AWS · GCP · IaC · Kubernetes · Scripting &nbsp;·&nbsp; Free &amp; In-Browser</div>
+  <div class="mast-body">
+    <div class="mast-left">
+      <div><strong>Vol. II · Multi-Cloud Edition</strong></div>
+      <div>Azure · AWS · GCP · IaC</div>
+      <div>Networking · Kubernetes · Scripting</div>
+      <div style="margin-top:8px;font-size:10px;color:#94A3B8">30+ tools. No account.<br>Works offline.</div>
+    </div>
+    <div class="mast-center">
+      <h1>Cloud Engineering<br><em>Toolkit</em></h1>
+      <div class="mast-sub">A Professional Multi-Cloud Reference</div>
+      <div class="stamp">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity:0.9">
+          <path d="M27 22.5a4.5 4.5 0 0 0-.46-9A6.75 6.75 0 0 0 13.5 15.75v.25H12a4.5 4.5 0 0 0 0 9h15z" stroke="#38BDF8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M14 28.5l2.5-3.5M18.5 28.5h4" stroke="#38BDF8" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <div class="stamp-lbl">TOOLKIT</div>
+      </div>
+    </div>
+    <div class="mast-right">
+      <div>Multi-Cloud Reference</div>
+      <div>Built for cloud engineers</div>
+      <div>and students.</div>
+      <div class="cloud-pills">
+        <span class="cloud-pill pill-az">Azure</span>
+        <span class="cloud-pill pill-aws">AWS</span>
+        <span class="cloud-pill pill-gcp">GCP</span>
+        <span class="cloud-pill pill-k8s">K8s</span>
+        <span class="cloud-pill pill-iac">IaC</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="search-wrap">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input id="search" type="text" placeholder="Search tools..." autocomplete="off" spellcheck="false"/>
+  </div>
+  <ul class="nav-tabs" id="nav-tabs">
+    <li class="nav-tab active" data-tab="featured">Featured</li>
+    <li class="nav-tab" data-tab="multicloud">Multi-Cloud <span class="ct">8</span></li>
+    <li class="nav-tab" data-tab="networking">Networking <span class="ct">5</span></li>
+    <li class="nav-tab" data-tab="iac">IaC <span class="ct">6</span></li>
+    <li class="nav-tab" data-tab="k8s">Kubernetes <span class="ct">4</span></li>
+    <li class="nav-tab" data-tab="scripting">Scripting <span class="ct">4</span></li>
+    <li class="nav-tab" data-tab="cost">Cost <span class="ct">3</span></li>
+    <li class="nav-tab" data-tab="ref">Reference</li>
+    <li class="nav-tab" data-tab="about">About</li>
+  </ul>
+</div>
+<main>
+<!-- FEATURED -->
+<section class="section active" id="tab-featured">
+  <div class="sec-head">
+    <div class="sec-title"><span class="sec-vol">Index</span>Featured Tools</div>
+    <p class="sec-desc">The tools cloud engineers reach for every day  - across Azure, AWS, GCP, and Kubernetes.</p>
+  </div>
+  <div class="tools-grid" id="featured-grid"></div>
+</section>
+
+<!-- MULTI-CLOUD -->
+<section class="section" id="tab-multicloud">
+  <div class="sec-head">
+    <div class="sec-title"><span class="sec-vol">I</span>Multi-Cloud Tools</div>
+    <p class="sec-desc">Service equivalents, naming conventions, IAM comparisons, and CLI commands across Azure, AWS, and GCP.</p>
+  </div>
+  <div class="group">
+    <div class="group-label">Service Mapping &amp; Comparison</div>
+    <div class="tools-grid">
+
+      <div class="tool-card" data-tool="cloudcompare">
+        <div class="tool-header"><div class="tool-icon">🔀</div><div><div class="tool-name">Cloud Service Mapper</div><div class="tags"><span class="tag tag-az">Azure</span><span class="tag tag-aws">AWS</span><span class="tag tag-gcp">GCP</span></div></div></div>
+        <p class="tool-desc">Map any cloud service concept to its equivalent across Azure, AWS, and GCP  - compute, storage, databases, networking, IAM, and more.</p>
+        <div class="card-cta">Open tool <span class="cta-arrow">&#x2192;</span></div>
+        <div class="tool-panel" id="panel-cloudcompare">
+          <button class="panel-close" onclick="closePanel('cloudcompare')">X</button>
+          <div class="panel-title">multi-cloud / service-mapper</div>
+          <div class="field"><label>Filter by Category</label>
+            <select id="cc-cat" onchange="renderCloudCompare()">
+              <option value="all">All Categories</option>
+              <option value="compute">Compute</option>
+              <option value="storage">Storage</option>
+              <option value="database">Database</option>
+              <option value="networking">Networking</option>
+              <option value="iam">IAM &amp; Security</option>
+              <option value="containers">Containers &amp; K8s</option>
+              <option value="serverless">Serverless</option>
+              <option value="monitoring">Monitoring</option>
+              <option value="cicd">CI/CD</option>
+            </select>
+          </div>
+          <div id="cc-table-wrap" style="overflow-x:auto;margin-top:4px">
+            <table class="cmp-table" id="cc-table">
+              <thead><tr><th>Concept</th><th>Azure</th><th>AWS</th><th>GCP</th></tr></thead>
+              <tbody id="cc-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="tool-card" data-tool="iamcompare">
+        <div class="tool-header"><div class="tool-icon">🔐</div><div><div class="tool-name">IAM Concepts Across Clouds</div><div class="tags"><span class="tag tag-az">Azure</span><span class="tag tag-aws">AWS</span><span class="tag tag-gcp">GCP</span></div></div></div>
+        <p class="tool-desc">Compare IAM primitives  - roles, policies, service accounts, and permission models  - across all three major clouds.</p>
+        <div class="card-cta">Open tool <span class="cta-arrow">&#x2192;</span></div>
+        <div class="tool-panel" id="panel-iamcompare">
+          <button class="panel-close" onclick="closePanel('iamcompare')">X</button>
+          <div class="panel-title">multi-cloud / iam-comparison</div>
+          <div style="overflow-x:auto">
+            <table class="cmp-table">
+              <thead><tr><th>Concept</th><th>Azure</th><th>AWS</th><th>GCP</th></tr></thead>
+              <tbody id="iam-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="tool-card" data-tool="clicompare">
+        <div class="tool-header"><div class="tool-icon">⌨️</div><div><div class="tool-name">CLI Command Cheat Sheet</div><div class="tags"><span class="tag tag-az">az</span><span class="tag tag-aws">aws</span><span class="tag tag-gcp">gcloud</span></div></div></div>
+        <p class="tool-desc">Searchable equivalent CLI commands across az, aws cli, and gcloud for the most common cloud operations.</p>
+        <div class="card-cta">Open tool <span class="cta-arrow">&#x2192;</span></div>
+        <div class="tool-panel" id="panel-clicompare">
+          <button class="panel-close" onclick="closePanel('clicompare')">X</button>
+          <div class="panel-title">multi-cloud / cli-cheat-sheet</div>
+          <div class="field"><label>Filter</label><input id="cli-search" type="text" placeholder="vm, bucket, login, list..." oninput="renderCliCompare()"/></div>
+          <div style="overflow-x:auto"><table class="cmp-table"><thead><tr><th>Operation</th><th>az</th><th>aws</th><th>gcloud</th></tr></thead><tbody id="cli-body"></tbody></table></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="group">
+    <div class="group-label">Naming Conventions</div>
+    <div class="tools-grid">
+
+      <div class="tool-card" data-tool="naming">
+        <div class="tool-header"><div class="tool-icon">📛</div><div><div class="tool-name">Cloud Resource Naming</div><div class="tags"><span class="tag tag-az">Azure</span><span class="tag tag-aws">AWS</span><span class="tag tag-gcp">GCP</span></div></div></div>
+        <p class="tool-desc">Generate resource names following best-practice naming conventions for Azure (CAF), AWS, and GCP  - all in one tool.</p>
+        <div class="card-cta">Open tool <span class="cta-arrow">&#x2192;</span></div>
+        <div class="tool-panel" id="panel-naming">
+          <button class="panel-close" onclick="closePanel('naming')">X</button>
+          <div class="panel-title">naming / resource-naming-generator</div>
+          <div class="cloud-tabs">
+            <button class="ctab active-az" onclick="switchNamingCloud('az',this)">Azure (CAF)</button>
+            <button class="ctab" onclick="switchNamingCloud('aws',this)">AWS</button>
+            <button class="ctab" onclick="switchNamingCloud('gcp',this)">GCP</button>
+          </div>
+          <div class="cloud-pane visible" id="naming-az">
+            <div class="field-row">
+              <div class="field"><label>Resource Type</label>
+                <select id="naming-type">
+                  <option value="rg">Resource Group (rg-)</option><option value="vnet">Virtual Network (vnet-)</option>
+                  <option value="snet">Subnet (snet-)</option><option value="nsg">NSG (nsg-)</option>
+                  <option value="vm">Virtual Machine (vm)</option><option value="st">Storage Account (st)</option>
+                  <option value="kv">Key Vault (kv-)</option><option value="acr">Container Registry (cr)</option>
+                  <option value="aks">AKS Cluster (aks-)</option><option value="func">Function App (func-)</option>
+                  <option value="sql">SQL Server (sql-)</option><option value="id">Managed Identity (id-)</option>
+                </select>
+              </div>
+              <div class="field"><label>Environment</label>
+                <select id="naming-env"><option>prod</option><option>dev</option><option>stg</option><option>test</option></select>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label>Workload</label><input id="naming-workload" type="text" value="financeapi"/></div>
+              <div class="field"><label>Region</label>
+                <select id="naming-region"><option value="uks">uks</option><option value="ukw">ukw</option><option value="neu">neu</option><option value="weu">weu</option><option value="eus">eus</option></select>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label>Instance</label><input id="naming-instance" type="text" value="001"/></div>
+              <div class="field"><label>Suffix (optional)</label><input id="naming-suffix" type="text" placeholder=""/></div>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-az" onclick="generateName()">Generate Azure Name</button>
+              <button class="btn btn-ghost" onclick="copyOut('output-naming')">Copy</button>
+            </div>
+          </div>
+          <div class="cloud-pane" id="naming-aws">
+            <div class="field-row">
+              <div class="field"><label>Resource Type</label>
+                <select id="aws-naming-type">
+                  <option value="vpc">VPC</option><option value="subnet">Subnet</option><option value="sg">Security Group</option>
+                  <option value="ec2">EC2 Instance</option><option value="s3">S3 Bucket</option><option value="rds">RDS Instance</option>
+                  <option value="eks">EKS Cluster</option><option value="lambda">Lambda Function</option>
+                  <option value="iam-role">IAM Role</option><option value="ecr">ECR Repository</option>
+                </select>
+              </div>
+              <div class="field"><label>Environment</label>
+                <select id="aws-naming-env"><option>prod</option><option>dev</option><option>staging</option><option>test</option></select>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label>Service / App</label><input id="aws-naming-app" type="text" value="payments"/></div>
+              <div class="field"><label>Region Abbrev</label>
+                <select id="aws-naming-region"><option value="use1">use1 (us-east-1)</option><option value="euw1">euw1 (eu-west-1)</option><option value="euw2">euw2 (eu-west-2)</option><option value="apse1">apse1 (ap-southeast-1)</option></select>
+              </div>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-aws" onclick="generateAwsName()">Generate AWS Name</button>
+              <button class="btn btn-ghost" onclick="copyOut('output-naming')">Copy</button>
+            </div>
+          </div>
+          <div class="cloud-pane" id="naming-gcp">
+            <div class="field-row">
+              <div class="field"><label>Resource Type</label>
+                <select id="gcp-naming-type">
+                  <option value="vpc">VPC Network</option><option value="subnet">Subnetwork</option>
+                  <option value="firewall">Firewall Rule</option><option value="gce">Compute Engine Instance</option>
+                  <option value="gcs">Cloud Storage Bucket</option><option value="gke">GKE Cluster</option>
+                  <option value="cloudfn">Cloud Function</option><option value="sa">Service Account</option>
+                  <option value="sql">Cloud SQL</option><option value="ar">Artifact Registry</option>
+                </select>
+              </div>
+              <div class="field"><label>Environment</label>
+                <select id="gcp-naming-env"><option>prod</option><option>dev</option><option>staging</option><option>test</option></select>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label>Service / App</label><input id="gcp-naming-app" type="text" value="payments"/></div>
+              <div class="field"><label>Region Abbrev</label>
+                <select id="gcp-naming-region"><option value="euw1">euw1 (europe-west1)</option><option value="euw2">euw2 (europe-west2)</option><option value="use1">use1 (us-east1)</option><option value="apse1">apse1 (asia-southeast1)</option></select>
+              </div>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-gcp" onclick="generateGcpName()">Generate GCP Name</button>
+              <button class="btn btn-ghost" onclick="copyOut('output-naming')">Copy</button>
+            </div>
+          </div>
+          <div class="output" id="output-naming"></div>
+        </div>
+      </div>
+
+      <div class="tool-card" data-tool="skucalc">
+        <div class="tool-header"><div class="tool-icon">💡</div><div><div class="tool-name">VM / Instance Type Advisor</div><div class="tags"><span class="tag tag-az">Azure</span><span class="tag tag-aws">AWS</span><span class="tag tag-gcp">GCP</span></div></div></div>
+        <p class="tool-desc">Find the right VM SKU or instance type across Azure, AWS, and GCP by vCPU and RAM requirements.</p>
+        <div class="card-cta">Open tool <span class="cta-arrow">&#x2192;</span></div>
+        <div class="tool-panel" id="panel-skucalc">
+          <button class="panel-close" onclick="closePanel('skucalc')">X</button>
+          <div class="panel-title">compute / instance-type-advisor</div>
+          <div class="cloud-tabs">
+            <button class="ctab active-all" onclick="switchSkuCloud('all',this)">All Clouds</button>
+            <button class="ctab" onclick="switchSkuCloud('az',this)">Azure</button>
+            <button class="ctab" onclick="switchSkuCloud('aws',this)">AWS</button>
+            <button class="ctab" onclick="switchSkuCloud('gcp',this)">GCP</button>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Min vCPUs</label><input id="sku-vcpu" type="number" min="1" value="4"/></div>
+            <div class="field"><label>Min RAM (GiB)</label><input id="sku-ram" type="number" min="1" value="16"/></div>
+          </div>
+          <div class="field"><label>Workload Type</label>
+            <select id="sku-workload">
+              <option value="general">General Purpose</option><option value="compute">Compute Optimised</option>
+              <option value="memory">Memory Optimised</option><option value="storage">Storage Optimised</option><option value="gpu">GPU</option>
+            </select>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="adviseSku()">Find Instance Types</button>
+            <button class="btn btn-ghost" onclick="copyOut('output-skucalc')">Copy</button>
+          </div>
+          <div class="output" id="output-skucalc"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- NETWORKING -->
+<section class="section" id="tab-networking">
+  <div class="sec-head">
+    <div class="sec-title"><span class="sec-vol">II</span>Networking Tools</div>
+    <p class="sec-desc">CIDR math, subnet planning, firewall rules, and VPC/VNet design across clouds.</p>
+  </div>
+  <div class="group">
+    <div class="group-label">CIDR &amp; Subnet Math</div>
+    <div class="tools-grid">
+
+      <div class="tool-card" data-tool="cidrinfo">
+        <div class="tool-header"><div class="tool-icon">📐</div><div><div class="tool-name">CIDR Calculator</div><div class="tags"><span class="tag tag-net">Universal</span></div></div></div>
+        <p class="tool-desc">Network address, broadcast, host range, subnet mask, and cloud-usable count from any CIDR block.</p>
+        <div class="card-cta">Open tool <span class="cta-arrow">&#x2192;</span></div>
+        <div class="tool-panel" id="panel-cidrinfo">
+          <button class="panel-close" onclick="closePanel('cidrinfo')">X</button>
+          <div class="panel-title">networking / cidr-calculator</div>
+          <div class="field"><label>CIDR Block</label><input id="cidr-input" type="text" value="10.10.0.0/22"/></div>
+          <div class="btn-row"><button class="btn btn-primary" onclick="calcCidr()">Calculate</button><button class="btn btn-ghost" onclick="copyOut('output-cidrinfo')">Copy</button></div>
+          <div class="stats-row" id="cidr-stats" style="display:none"></div>
+          <div class="output" id="output-cidrinfo"></div>
+        </div>
+      </div>
+
+      <div class="tool-card" data-tool="cidrsplit">
+        <div class="tool-header"><div class="tool-icon">✂️</div><div><div class="tool-name">Subnet Splitter</div><div class="tags"><span class="tag tag-net">Universal</span></div></div></div>
+        <p class="tool-desc">Split a parent CIDR into equal child subnets at any target prefix length.</p>
+        <div class="card-cta">Open tool <span class="cta-arrow">&#x2192;</span></div>
+        <div class="tool-panel" id="panel-cidrsplit">
+          <button class="panel-close" onclick="closePanel('cidrsplit')">X</button>
+          <div class="panel-title">networking / subnet-splitter</div>
+          <div class="field-row">
+            <div class="field"><label>Parent CIDR</label><input id="split-cidr" type="text" value="10.0.0.0/16"/></div>
+            <div class="field"><label>Target Prefix</label><input id="split-prefix" type="number" min="1" max="32" value="24"/></div>
+          </div>
+          <div class="btn-row"><button class="btn btn-primary" onclick="splitCidr()">Split</button><button class="btn btn-ghost" onclick="copyOut('output-cidrsplit')">Copy</button></div>
+          <div class="output" id="output-cidrsplit"></div>
+        </div>
+      </div>
+
+      <div class="tool-card" data-tool="overlap">
+        <div class="tool-header"><div class="tool-icon">⊕</div><div><div class="tool-name">CIDR Overlap Detector</div><div class="tags"><span class="tag tag-net">Universal</span></div></div></div>
+        <p class="tool-desc">Detect overlapping CIDR ranges  - essential before VPC/VNet peering, Transit Gateway, or VPN setup.</p>
+        <div class="card-cta">Open tool <span class="cta-arrow">&#x2192;</span></div>
+        <div class="tool-panel" id="panel-overlap">
+          <button class="panel-close" onclick="closePanel('overlap')">X</button>
+          <div class="panel-title">networking / overlap-detector</div>
+          <div class="field"><label>CIDR Blocks (one per line)</label>
+            <textarea id="overlap-cidrs">10.0.0.0/16
+10.0.100.0/24
+172.16.0.0/12
+192.168.0.0/24</textarea>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="detectOverlap()">Detect Overlaps</button>
+            <button class="btn btn-ghost" onclick="copyOut('output-overlap')">Copy</button>
+            <button class="btn btn-ghost" onclick="document.getElementById('overlap-cidrs').value='';document.getElementById('output-overlap').classList.remove('visible')">Clear</button>
+          </div>
+          <div class="output" id="output-overlap"></div>
+        </div>
+      </div>
+
+      <div class="tool-card" data-tool="ipcheck">
+        <div class="tool-header"><div class="tool-icon">🔍</div><div><div class="tool-name">IP in Subnet Check</div><div class="tags"><span class="tag tag-net">Universal</span></div></div></div>
+        <p class="tool-desc">Check whether an IP falls within a CIDR block  - useful for firewall rule and security group validation.</p>
+        <div class="card-cta">Open tool <span class="cta-arrow">&#x2192;</span></div>
+        <div class="tool-panel" id="panel-ipcheck">
+          <button class="panel-close" onclick="closePanel('ipcheck')">X</button>
+          <div class="panel-title">networking / ip-in-subnet</div>
+          <div class="field-row">
+            <div class="field"><label>IP Address</label><input id="ipc-ip" type="text" value="192.168.1.50"/></div>
+            <div class="field"><label>CIDR Block</label><input id="ipc-cidr" type="text" value="192.168.1.0/24"/></div>
+          </div>
+          <div class="btn-row"><button class="btn btn-primary" onclick="checkIp()">Check</button><button class="btn btn-ghost" onclick="copyOut('output-ipcheck')">Copy</button></div>
+          <div class="output" id="output-ipcheck"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="group">
+    <div class="group-label">VPC / VNet Planning &amp; Firewall Rules</div>
+    <div class="tools-grid">
+
+      <div class="tool-card" data-tool="vnetplan">
+        <div class="tool-header"><div class="tool-icon">🗺️</div><div><div class="tool-name">VPC / VNet Subnet Planner</div><div class="tags"><span class="tag tag-az">Azure</span><span class="tag tag-aws">AWS</span><span class="tag tag-gcp">GCP</span></div></div></div>
+        <p class="tool-desc">Split a network address space into subnets using hub-spoke, AWS multi-tier, or GCP shared VPC patterns.</p>
+        <div class="card-cta">Open tool <span class="cta-arrow">&#x2192;</span></div>
+        <div class="tool-panel" id="panel-vnetplan">
+          <button class="panel-close" onclick="closePanel('vnetplan')">X</button>
+          <div class="panel-title">networking / vpc-vnet-subnet-planner</div>
+          <div class="cloud-tabs">
+            <button class="ctab active-az" onclick="switchVnetCloud('az',this)">Azure VNet</button>
+            <button class="ctab" onclick="switchVnetCloud('aws',this)">AWS VPC</button>
+            <button class="ctab" onclick="switchVnetCloud('gcp',this)">GCP VPC</button>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Address Space / CIDR</label><input id="vnet-cidr" type="text" value="10.10.0.0/16"/></div>
+            <div class="field"><label>Pattern</label>
+              <select id="vnet-pattern">
+                <option value="hub">Hub VNet / Transit VPC</option>
+                <option value="spoke">Spoke / App VPC</option>
+                <option value="aks">AKS / EKS / GKE VPC</option>
+                <option value="mgmt">Management / Ops VPC</option>
+                <option value="aws-3tier">AWS 3-Tier Web App</option>
+              </select>
+            </div>
+          </div>
+          <div class="btn-row"><button class="btn btn-primary" onclick="planVnet()">Plan Subnets</button><button class="btn btn-ghost" onclick="copyOut('output-vnetplan')">Copy</button></div>
+          <div class="output" id="output-vnetplan"></div>
+        </div>
+      </div>
+
+      <div class="tool-card" data-tool="nsg">
+        <div class="tool-header"><div class="tool-icon">🛡️</div><div><div class="tool-name">Firewall Rule Builder</div><div class="tags"><span class="tag tag-az">NSG</span><span class="tag tag-aws">Sec Group</span><span class="tag tag-gcp">GCP FW</span></div></div></div>
+        <p class="tool-desc">Build firewall rules for Azure NSGs, AWS Security Groups, or GCP Firewall Rules  - export as IaC or CLI command.</p>
+        <div class="card-cta">Open tool <span class="cta-arrow">&#x2192;</span></div>
+        <div class="tool-panel" id="panel-nsg">
+          <button class="panel-close" onclick="closePanel('nsg')">X</button>
+          <div class="panel-title">networking / firewall-rule-builder</div>
+          <div class="cloud-tabs">
+            <button class="ctab active-az" onclick="switchFwCloud('az',this)">Azure NSG</button>
+            <button class="ctab" onclick="switchFwCloud('aws',this)">AWS Security Group</button>
+            <button class="ctab" onclick="switchFwCloud('gcp',this)">GCP Firewall</button>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Rule Name</label><input id="nsg-name" type="text" value="allow-https-inbound"/></div>
+            <div class="field"><label>Priority / Order</label><input id="nsg-priority" type="number" value="200"/></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Direction</label><select id="nsg-dir"><option>Inbound</option><option>Outbound</option></select></div>
+            <div class="field"><label>Action</label><select id="nsg-access"><option>Allow</option><option>Deny</option></select></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Protocol</label><select id="nsg-proto"><option>tcp</option><option>udp</option><option>icmp</option><option>all</option></select></div>
+            <div class="field"><label>Port(s)</label><input id="nsg-port" type="text" value="443"/></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Source CIDR</label><input id="nsg-src" type="text" value="0.0.0.0/0"/></div>
+            <div class="field"><label>Format</label><select id="nsg-format"><option value="bicep">Bicep (Azure)</option><option value="arm">ARM JSON</option><option value="terraform">Terraform HCL</option><option value="awscli">AWS CLI</option><option value="gcpcli">gcloud CLI</option></select></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="buildNsg()">Generate Rule</button>
+            <button class="btn btn-ghost" onclick="copyOut('output-nsg')">Copy</button>
+          </div>
+          <div class="output" id="output-nsg"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- IaC -->
+<section class="section" id="tab-iac">
+  <div class="sec-head">
+    <div class="sec-title"><span class="sec-vol">III</span>Infrastructure as Code</div>
+    <p class="sec-desc">Terraform modules and backends for all three clouds, Bicep scaffolding, and CI/CD pipelines with OIDC auth.</p>
+  </div>
+  <div class="group">
+    <div class="group-label">Terraform  - Multi-Cloud</div>
+    <div class="tools-grid">
+
+      <div class="tool-card" data-tool="tfmodule">
+        <div class="tool-header"><div class="tool-icon">🟣</div><div><div class="tool-name">Terraform Module Scaffold</div><div class="tags"><span class="tag tag-iac">IaC</span><span class="tag tag-az">Azure</span><span class="tag tag-aws">AWS</span><span class="tag tag-gcp">GCP</span></div></div></div>
+        <p class="tool-desc">Generate main.tf, variables.tf, and outputs.tf for Azure, AWS, or GCP Terraform modules  - all three providers.</p>
+        <div class="card-cta">Open tool <span class="cta-arrow">&#x2192;</span></div>
+        <div class="tool-panel" id="panel-tfmodule">
+          <button class="panel-close" onclick="closePanel('tfmodule')">X</button>
+          <div class="panel-title">iac / terraform-module-scaffold</div>
+          <div class="cloud-tabs">
+            <button class="ctab active-az" onclick="switchTfCloud('az',this)">Azure</button>
+            <button class="ctab" onclick="switchTfCloud('aws',this)">AWS</button>
+            <button class="ctab" onclick="switchTfCloud('gcp',this)">GCP</button>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Resource</label><select id="tf-resource">
+              <option value="azurerm_resource_group">Azure Resource Group</option>
+              <option value="azurerm_virtual_network">Azure VNet</option>
+              <option value="azurerm_storage_account">Azure Storage Account</option>
+              <option value="azurerm_kubernetes_cluster">Azure AKS</option>
+              <option value="aws_vpc">AWS VPC</option>
+              <option value="aws_s3_bucket">AWS S3 Bucket</option>
+              <option value="aws_eks_cluster">AWS EKS Cluster</option>
+              <option value="aws_iam_role">AWS IAM Role</option>
+              <option value="google_compute_network">GCP VPC Network</option>
+              <option value="google_storage_bucket">GCP Cloud Storage</option>
+              <option value="google_container_cluster">GCP GKE Cluster</option>
+              <option value="google_service_account">GCP Service Account</option>
+            </select></div>
+            <div class="field"><label>Module Name</label><input id="tf-name" type="text" value="networking"/></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="scaffoldTf()">Generate Module</button>
+            <button class="btn btn-ghost" onclick="copyOut('output-tfmodule')">Copy</button>
+          </div>
+          <div class="output" id="output-tfmodule"></div>
+        </div>
+      </div>
+
+      <div class="tool-card" data-tool="tfbackend">
+        <div class="tool-header"><div class="tool-icon">🗄️</div><div><div class="tool-name">Terraform Remote Backend</div><div class="tags"><span class="tag tag-iac">IaC</span><span class="tag tag-az">Azure</span><span class="tag tag-aws">AWS</span><span class="tag tag-gcp">GCP</span></div></div></div>
+        <p class="tool-desc">Generate Terraform remote state backend config for Azure Blob, AWS S3, or GCP Cloud Storage  - with locking and versioning.</p>
+        <div class="card-cta">Open tool <span class="cta-arrow">&#x2192;</span></div>
+        <div class="tool-panel" id="panel-tfbackend">
+          <button class="panel-close" onclick="closePanel('tfbackend')">X</button>
+          <div class="panel-title">iac / terraform-remote-backend</div>
+          <div class="cloud-tabs">
+            <button class="ctab active-az" onclick="switchBackendCloud('az',this)">Azure Blob</button>
+            <button class="ctab" onclick="switchBackendCloud('aws',this)">AWS S3</button>
+            <button class="ctab" onclick="switchBackendCloud('gcp',this)">GCP GCS</button>
+          </div>
+          <div class="cloud-pane visible" id="backend-az">
+            <div class="field-row">
+              <div class="field"><label>Storage Account</label><input id="tfb-st" type="text" value="sttfstateprod001"/></div>
+              <div class="field"><label>Container</label><input id="tfb-container" type="text" value="tfstate"/></div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label>Resource Group</label><input id="tfb-rg" type="text" value="rg-terraform-prod-uks-001"/></div>
+              <div class="field"><label>State Key</label><input id="tfb-key" type="text" value="prod.terraform.tfstate"/></div>
+            </div>
+          </div>
+          <div class="cloud-pane" id="backend-aws">
+            <div class="field-row">
+              <div class="field"><label>S3 Bucket Name</label><input id="tfb-bucket" type="text" value="my-terraform-state-prod"/></div>
+              <div class="field"><label>State Key</label><input id="tfb-s3key" type="text" value="prod/terraform.tfstate"/></div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label>AWS Region</label><input id="tfb-awsregion" type="text" value="eu-west-2"/></div>
+              <div class="field"><label>DynamoDB Lock Table</label><input id="tfb-dynamo" type="text" value="terraform-state-lock"/></div>
+            </div>
+          </div>
+          <div class="cloud-pane" id="backend-gcp">
+            <div class="field-row">
+              <div class="field"><label>GCS Bucket Name</label><input id="tfb-gcsbucket" type="text" value="my-tf-state-prod"/></div>
+              <div class="field"><label>State Prefix</label><input id="tfb-gcsprefix" type="text" value="prod"/></div>
+            </div>
+            <div class="field"><label>GCP Project ID</label><input id="tfb-gcsproj" type="text" value="my-project-id"/></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="generateBackend()">Generate Config</button>
+            <button class="btn btn-ghost" onclick="copyOut('output-tfbackend')">Copy</button>
+          </div>
+          <div class="output" id="output-tfbackend"></div>
+        </div>
+      </div>
+
+      <div class="tool-card" data-tool="cicd">
+        <div class="tool-header"><div class="tool-icon">🔄</div><div><div class="tool-name">CI/CD Pipeline Generator</div><div class="tags"><span class="tag tag-iac">IaC</span><span class="tag tag-az">Azure</span><span class="tag tag-aws">AWS</span><span class="tag tag-gcp">GCP</span></div></div></div>
+        <p class="tool-desc">Generate GitHub Actions or Azure Pipelines YAML for deploying Terraform or Bicep to Azure, AWS, or GCP with OIDC auth.</p>
+        <div class="card-cta">Open tool <span class="cta-arrow">&#x2192;</span></div>
+        <div class="tool-panel" id="panel-cicd">
+          <button class="panel-close" onclick="closePanel('cicd')">X</button>
+          <div class="panel-title">iac / cicd-pipeline-generator</div>
+          <div class="field-row">
+            <div class="field"><label>CI Platform</label><select id="cicd-platform"><option value="gha">GitHub Actions</option><option value="ado">Azure DevOps</option></select></div>
+            <div class="field"><label>IaC Tool</label><select id="cicd-iac"><option value="terraform-az">Terraform - Azure</option><option value="terraform-aws">Terraform - AWS</option><option value="terraform-gcp">Terraform - GCP</option><option value="bicep">Bicep - Azure</option></select></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Environment</label><select id="cicd-env"><option>dev</option><option>stg</option><option>prod</option></select></div>
+            <div class="field"><label>Auth</label><select id="cicd-auth"><option value="oidc">OIDC / Workload Identity</option><option value="sp">Service Principal / Credentials</option></select></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="generateCicd()">Generate Pipeline</button>
+            <button class="btn btn-ghost" onclick="copyOut('output-cicd')">Copy</button>
+          </div>
+          <div class="output" id="output-cicd"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="group">
+    <div class="group-label">Bicep  - Azure</div>
+    <div class="tools-grid">
+      <div class="tool-card" data-tool="bicepmodule">
+        <div class="tool-header"><div class="tool-icon">📦</div><div><div class="tool-name">Bicep Module Scaffold</div><div class="tags"><span class="tag tag-iac">IaC</span><span class="tag tag-az">Azure</span></div></div></div>
+        <p class="tool-desc">Generate a production-ready Bicep module with hardened defaults for Storage, Key Vault, VNet, and AKS.</p>
+        <div class="card-cta">Open tool <span class="cta-arrow">&#x2192;</span></div>
+        <div class="tool-panel" id="panel-bicepmodule">
+          <button class="panel-close" onclick="closePanel('bicepmodule')">X</button>
+          <div class="panel-title">iac / bicep-module-scaffold</div>
+          <div class="field-row">
+            <div class="field"><label>Resource</label>
+              <select id="bicep-resource"><option value="storageAccount">Storage Account</option><option value="keyVault">Key Vault</option><option value="vnet">Virtual Network</option><option value="aks">AKS Cluster</option></select>
+            </div>
+            <div class="field"><label>Module Name</label><input id="bicep-name" type="text" value="storageModule"/></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-az" onclick="scaffoldBicep()">Generate Module</button>
+            <button class="btn btn-ghost" onclick="copyOut('output-bicepmodule')">Copy</button>
+          </div>
+          <div class="output" id="output-bicepmodule"></div>
+        </div>
+      </div>
+      <div class="tool-card" data-tool="bicepparams">
+        <div class="tool-header"><div class="tool-icon">⚙️</div><div><div class="tool-name">Bicep Parameters File</div><div class="tags"><span class="tag tag-iac">IaC</span><span class="tag tag-az">Azure</span></div></div></div>
+        <p class="tool-desc">Generate a .bicepparam or parameters.json file from name=value pairs for any environment.</p>
+        <div class="card-cta">Open tool <span class="cta-arrow">&#x2192;</span></div>
+        <div class="tool-panel" id="panel-bicepparams">
+          <button class="panel-close" onclick="closePanel('bicepparams')">X</button>
+          <div class="panel-title">iac / bicep-params-generator</div>
+          <div class="field-row">
+            <div class="field"><label>Format</label><select id="param-format"><option value="bicepparam">.bicepparam</option><option value="json">parameters.json</option></select></div>
+            <div class="field"><label>Environment</label><select id="param-env"><option>dev</option><option>stg</option><option>prod</option></select></div>
+          </div>
+          <div class="field"><label>Parameters (name=value, one per line)</label>
+            <textarea id="param-list">location=uksouth
+environment=dev
+skuName=Standard_LRS
+adminUsername=azureadmin</textarea>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-az" onclick="generateParams()">Generate File</button>
+            <button class="btn btn-ghost" onclick="copyOut('output-bicepparams')">Copy</button>
+          </div>
+          <div class="output" id="output-bicepparams"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KUBERNETES -->
+<section class="section" id="tab-k8s">
+  <div class="sec-head">
+    <div class="sec-title"><span class="sec-vol">IV</span>Kubernetes</div>
+    <p class="sec-desc">Deployment manifests, node pool sizing for AKS/EKS/GKE, Helm chart scaffolding, and kubectl reference.</p>
+  </div>
+  <div class="tools-grid">
+
+    <div class="tool-card" data-tool="k8smanifest">
+      <div class="tool-header"><div class="tool-icon">⎈</div><div><div class="tool-name">Deployment Manifest Generator</div><div class="tags"><span class="tag tag-k8s">K8s</span><span class="tag tag-net">Universal</span></div></div></div>
+      <p class="tool-desc">Production-ready Kubernetes Deployment YAML with resource limits, readiness/liveness probes, and security context.</p>
+      <div class="card-cta">Open tool <span class="cta-arrow">&#x2192;</span></div>
+        <div class="tool-panel" id="panel-k8smanifest">
+        <button class="panel-close" onclick="closePanel('k8smanifest')">X</button>
+        <div class="panel-title">k8s / deployment-manifest-generator</div>
+        <div class="field-row">
+          <div class="field"><label>App Name</label><input id="k8s-name" type="text" value="payments-api"/></div>
+          <div class="field"><label>Namespace</label><input id="k8s-ns" type="text" value="default"/></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Container Image</label><input id="k8s-image" type="text" value="registry.example.com/app:latest"/></div>
+          <div class="field"><label>Port</label><input id="k8s-port" type="number" value="8080"/></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Replicas</label><input id="k8s-replicas" type="number" value="3" min="1"/></div>
+          <div class="field"><label>CPU Req / Limit</label><input id="k8s-cpu" type="text" value="250m / 500m"/></div>
+        </div>
+        <div class="field"><label>Memory Req / Limit</label><input id="k8s-mem" type="text" value="256Mi / 512Mi"/></div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="genK8sManifest()">Generate YAML</button>
+          <button class="btn btn-ghost" onclick="copyOut('output-k8smanifest')">Copy</button>
+        </div>
+        <div class="output" id="output-k8smanifest"></div>
+      </div>
+    </div>
+
+    <div class="tool-card" data-tool="akspool">
+      <div class="tool-header"><div class="tool-icon">🏗️</div><div><div class="tool-name">Managed K8s Node Pool Advisor</div><div class="tags"><span class="tag tag-az">AKS</span><span class="tag tag-aws">EKS</span><span class="tag tag-gcp">GKE</span></div></div></div>
+      <p class="tool-desc">Recommend node pool size, VM/instance type, and autoscaler settings for AKS, EKS, or GKE from workload requirements.</p>
+      <div class="card-cta">Open tool <span class="cta-arrow">&#x2192;</span></div>
+        <div class="tool-panel" id="panel-akspool">
+        <button class="panel-close" onclick="closePanel('akspool')">X</button>
+        <div class="panel-title">k8s / managed-k8s-node-advisor</div>
+        <div class="cloud-tabs">
+          <button class="ctab active-az" onclick="switchPoolCloud('az',this)">AKS</button>
+          <button class="ctab" onclick="switchPoolCloud('aws',this)">EKS</button>
+          <button class="ctab" onclick="switchPoolCloud('gcp',this)">GKE</button>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Workload Type</label><select id="aks-wl"><option value="web">Web / API</option><option value="batch">Batch / Jobs</option><option value="ml">ML / GPU</option><option value="infra">Infra / System</option></select></div>
+          <div class="field"><label>Expected Pod Count</label><input id="aks-pods" type="number" value="30" min="1"/></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Avg Pod CPU (millicores)</label><input id="aks-cpu" type="number" value="250" min="1"/></div>
+          <div class="field"><label>Avg Pod Memory (MiB)</label><input id="aks-mem" type="number" value="512" min="1"/></div>
+        </div>
+        <div class="btn-row"><button class="btn btn-primary" onclick="adviseAks()">Advise Node Pool</button><button class="btn btn-ghost" onclick="copyOut('output-akspool')">Copy</button></div>
+        <div class="output" id="output-akspool"></div>
+      </div>
+    </div>
+
+    <div class="tool-card" data-tool="helmscaffold">
+      <div class="tool-header"><div class="tool-icon">⛵</div><div><div class="tool-name">Helm Chart Scaffold</div><div class="tags"><span class="tag tag-k8s">K8s</span><span class="tag tag-iac">IaC</span></div></div></div>
+      <p class="tool-desc">Generate a minimal production Helm chart structure with values.yaml, deployment template, and service template.</p>
+      <div class="card-cta">Open tool <span class="cta-arrow">&#x2192;</span></div>
+        <div class="tool-panel" id="panel-helmscaffold">
+        <button class="panel-close" onclick="closePanel('helmscaffold')">X</button>
+        <div class="panel-title">k8s / helm-chart-scaffold</div>
+        <div class="field-row">
+          <div class="field"><label>Chart Name</label><input id="helm-name" type="text" value="payments-api"/></div>
+          <div class="field"><label>Container Image</label><input id="helm-image" type="text" value="registry.example.com/app"/></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Service Type</label><select id="helm-svctype"><option>ClusterIP</option><option>LoadBalancer</option><option>NodePort</option></select></div>
+          <div class="field"><label>Port</label><input id="helm-port" type="number" value="8080"/></div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="scaffoldHelm()">Generate Chart Files</button>
+          <button class="btn btn-ghost" onclick="copyOut('output-helmscaffold')">Copy</button>
+        </div>
+        <div class="output" id="output-helmscaffold"></div>
+      </div>
+    </div>
+
+    <div class="tool-card" data-tool="kubectlref">
+      <div class="tool-header"><div class="tool-icon">⚡</div><div><div class="tool-name">kubectl Quick Reference</div><div class="tags"><span class="tag tag-k8s">K8s</span></div></div></div>
+      <p class="tool-desc">Searchable cheat sheet of essential kubectl commands for day-2 operations, debugging, and cluster management.</p>
+      <div class="card-cta">Open tool <span class="cta-arrow">&#x2192;</span></div>
+        <div class="tool-panel" id="panel-kubectlref">
+        <button class="panel-close" onclick="closePanel('kubectlref')">X</button>
+        <div class="panel-title">k8s / kubectl-quick-ref</div>
+        <div class="field"><label>Filter</label><input id="kubectl-search" type="text" placeholder="logs, exec, rollout, nodes..." oninput="filterKubectl()"/></div>
+        <div class="output visible" id="output-kubectlref" style="max-height:320px"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SCRIPTING -->
+<section class="section" id="tab-scripting">
+  <div class="sec-head">
+    <div class="sec-title"><span class="sec-vol">V</span>Scripting &amp; Automation</div>
+    <p class="sec-desc">Ready-to-use Bash, PowerShell, and Python snippets for common cloud automation tasks across all three clouds.</p>
+  </div>
+  <div class="tools-grid">
+
+    <div class="tool-card" data-tool="bashsnippets">
+      <div class="tool-header"><div class="tool-icon">🐚</div><div><div class="tool-name">Bash Cloud Snippets</div><div class="tags"><span class="tag tag-bash">Bash</span><span class="tag tag-az">Azure</span><span class="tag tag-aws">AWS</span><span class="tag tag-gcp">GCP</span></div></div></div>
+      <p class="tool-desc">Common Bash scripts for cloud automation  - resource listing, credential setup, bulk operations, and health checks.</p>
+      <div class="card-cta">Open tool <span class="cta-arrow">&#x2192;</span></div>
+        <div class="tool-panel" id="panel-bashsnippets">
+        <button class="panel-close" onclick="closePanel('bashsnippets')">X</button>
+        <div class="panel-title">scripting / bash-cloud-snippets</div>
+        <div class="field-row">
+          <div class="field"><label>Cloud</label><select id="bash-cloud"><option value="az">Azure (az cli)</option><option value="aws">AWS (aws cli)</option><option value="gcp">GCP (gcloud)</option></select></div>
+          <div class="field"><label>Task</label>
+            <select id="bash-task">
+              <option value="login">Login / Auth setup</option>
+              <option value="list-resources">List all resources / instances</option>
+              <option value="create-rg">Create resource group / VPC</option>
+              <option value="deploy-vm">Deploy a VM / instance</option>
+              <option value="storage-ops">Storage bucket / container operations</option>
+              <option value="k8s-creds">Get Kubernetes credentials</option>
+              <option value="cost-check">Check current spend / billing</option>
+              <option value="cleanup">Delete / cleanup resources</option>
+            </select>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="getBashSnippet()">Get Snippet</button>
+          <button class="btn btn-ghost" onclick="copyOut('output-bashsnippets')">Copy</button>
+        </div>
+        <div class="output" id="output-bashsnippets"></div>
+      </div>
+    </div>
+
+    <div class="tool-card" data-tool="pssnippets">
+      <div class="tool-header"><div class="tool-icon">🔷</div><div><div class="tool-name">PowerShell Cloud Snippets</div><div class="tags"><span class="tag tag-ps">PowerShell</span><span class="tag tag-az">Azure</span><span class="tag tag-aws">AWS</span></div></div></div>
+      <p class="tool-desc">PowerShell automation scripts for Azure (Az module) and AWS (AWS Tools for PowerShell)  - ideal for Windows-native automation.</p>
+      <div class="card-cta">Open tool <span class="cta-arrow">&#x2192;</span></div>
+        <div class="tool-panel" id="panel-pssnippets">
+        <button class="panel-close" onclick="closePanel('pssnippets')">X</button>
+        <div class="panel-title">scripting / powershell-cloud-snippets</div>
+        <div class="field-row">
+          <div class="field"><label>Cloud</label><select id="ps-cloud"><option value="az">Azure (Az module)</option><option value="aws">AWS (AWS.Tools)</option></select></div>
+          <div class="field"><label>Task</label>
+            <select id="ps-task">
+              <option value="connect">Connect / authenticate</option>
+              <option value="list-vms">List VMs / instances</option>
+              <option value="start-stop">Start / Stop resources</option>
+              <option value="storage">Storage operations</option>
+              <option value="tags">Tag resources in bulk</option>
+              <option value="report">Export resource report to CSV</option>
+            </select>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="getPsSnippet()">Get Snippet</button>
+          <button class="btn btn-ghost" onclick="copyOut('output-pssnippets')">Copy</button>
+        </div>
+        <div class="output" id="output-pssnippets"></div>
+      </div>
+    </div>
+
+    <div class="tool-card" data-tool="pysnippets">
+      <div class="tool-header"><div class="tool-icon">🐍</div><div><div class="tool-name">Python Cloud Snippets</div><div class="tags"><span class="tag tag-py">Python</span><span class="tag tag-az">Azure</span><span class="tag tag-aws">AWS</span><span class="tag tag-gcp">GCP</span></div></div></div>
+      <p class="tool-desc">Python SDK automation snippets using azure-mgmt, boto3 (AWS), and google-cloud libraries for programmatic cloud management.</p>
+      <div class="card-cta">Open tool <span class="cta-arrow">&#x2192;</span></div>
+        <div class="tool-panel" id="panel-pysnippets">
+        <button class="panel-close" onclick="closePanel('pysnippets')">X</button>
+        <div class="panel-title">scripting / python-cloud-snippets</div>
+        <div class="field-row">
+          <div class="field"><label>Cloud / SDK</label><select id="py-cloud"><option value="az">Azure SDK (azure-mgmt)</option><option value="aws">AWS (boto3)</option><option value="gcp">GCP (google-cloud)</option></select></div>
+          <div class="field"><label>Task</label>
+            <select id="py-task">
+              <option value="auth">Authentication / credentials</option>
+              <option value="list-vms">List compute instances</option>
+              <option value="storage-upload">Upload file to storage</option>
+              <option value="storage-list">List storage objects</option>
+              <option value="cost">Query cost / billing data</option>
+              <option value="tags">List resources by tag</option>
+            </select>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="getPySnippet()">Get Snippet</button>
+          <button class="btn btn-ghost" onclick="copyOut('output-pysnippets')">Copy</button>
+        </div>
+        <div class="output" id="output-pysnippets"></div>
+      </div>
+    </div>
+
+    <div class="tool-card" data-tool="clisetup">
+      <div class="tool-header"><div class="tool-icon">🛠️</div><div><div class="tool-name">CLI Setup &amp; Auth Guide</div><div class="tags"><span class="tag tag-az">az</span><span class="tag tag-aws">aws</span><span class="tag tag-gcp">gcloud</span></div></div></div>
+      <p class="tool-desc">Step-by-step CLI installation and authentication setup for az, aws cli, and gcloud  - including service principal and OIDC config.</p>
+      <div class="card-cta">Open tool <span class="cta-arrow">&#x2192;</span></div>
+        <div class="tool-panel" id="panel-clisetup">
+        <button class="panel-close" onclick="closePanel('clisetup')">X</button>
+        <div class="panel-title">scripting / cli-setup-guide</div>
+        <div class="cloud-tabs">
+          <button class="ctab active-az" onclick="switchCliSetup('az',this)">Azure CLI</button>
+          <button class="ctab" onclick="switchCliSetup('aws',this)">AWS CLI</button>
+          <button class="ctab" onclick="switchCliSetup('gcp',this)">gcloud CLI</button>
+        </div>
+        <div class="output visible" id="output-clisetup" style="max-height:400px"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- COST -->
+<section class="section" id="tab-cost">
+  <div class="sec-head">
+    <div class="sec-title"><span class="sec-vol">VI</span>Cost Tools</div>
+    <p class="sec-desc">Reserved instance calculators, budget alert advisors, and chargeback report generators.</p>
+  </div>
+  <div class="tools-grid">
+
+    <div class="tool-card" data-tool="savingsplan">
+      <div class="tool-header"><div class="tool-icon">📉</div><div><div class="tool-name">Reserved vs On-Demand Savings</div><div class="tags"><span class="tag tag-cost">Cost</span><span class="tag tag-az">Azure</span><span class="tag tag-aws">AWS</span><span class="tag tag-gcp">GCP</span></div></div></div>
+      <p class="tool-desc">Compare on-demand against reserved/committed use discount pricing for Azure, AWS, or GCP  - see exact savings over 1 and 3 years.</p>
+      <div class="card-cta">Open tool <span class="cta-arrow">&#x2192;</span></div>
+        <div class="tool-panel" id="panel-savingsplan">
+        <button class="panel-close" onclick="closePanel('savingsplan')">X</button>
+        <div class="panel-title">cost / reserved-savings-calculator</div>
+        <div class="field-row">
+          <div class="field"><label>Cloud Provider</label><select id="ri-cloud"><option value="az">Azure (Reserved Instances)</option><option value="aws">AWS (Reserved Instances)</option><option value="gcp">GCP (Committed Use Discounts)</option></select></div>
+          <div class="field"><label>Monthly On-Demand Cost (GBP)</label><input id="ri-payg" type="number" value="320" min="1"/></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>1yr Discount (%)</label><input id="ri-1yr" type="number" value="35" min="1" max="80"/></div>
+          <div class="field"><label>3yr Discount (%)</label><input id="ri-3yr" type="number" value="55" min="1" max="80"/></div>
+        </div>
+        <div class="btn-row"><button class="btn btn-primary" onclick="calcSavings()">Calculate Savings</button><button class="btn btn-ghost" onclick="copyOut('output-savingsplan')">Copy</button></div>
+        <div class="output" id="output-savingsplan"></div>
+      </div>
+    </div>
+
+    <div class="tool-card" data-tool="budgetalert">
+      <div class="tool-header"><div class="tool-icon">🔔</div><div><div class="tool-name">Budget Alert Advisor</div><div class="tags"><span class="tag tag-cost">Cost</span><span class="tag tag-az">Azure</span><span class="tag tag-aws">AWS</span><span class="tag tag-gcp">GCP</span></div></div></div>
+      <p class="tool-desc">Recommend budget alert thresholds by risk appetite and generate the IaC or CLI command to create the alert.</p>
+      <div class="card-cta">Open tool <span class="cta-arrow">&#x2192;</span></div>
+        <div class="tool-panel" id="panel-budgetalert">
+        <button class="panel-close" onclick="closePanel('budgetalert')">X</button>
+        <div class="panel-title">cost / budget-alert-advisor</div>
+        <div class="field-row">
+          <div class="field"><label>Cloud</label><select id="aa-cloud"><option value="az">Azure (Bicep)</option><option value="aws">AWS (CLI)</option><option value="gcp">GCP (gcloud)</option></select></div>
+          <div class="field"><label>Monthly Budget (GBP)</label><input id="aa-budget" type="number" value="5000" min="1"/></div>
+        </div>
+        <div class="field"><label>Risk Appetite</label><select id="aa-risk"><option value="low">Low (tight alerts)</option><option value="medium" selected>Medium</option><option value="high">High (relaxed)</option></select></div>
+        <div class="btn-row"><button class="btn btn-primary" onclick="calcAlerts()">Recommend Thresholds</button><button class="btn btn-ghost" onclick="copyOut('output-budgetalert')">Copy</button></div>
+        <div class="output" id="output-budgetalert"></div>
+      </div>
+    </div>
+
+    <div class="tool-card" data-tool="chargeback">
+      <div class="tool-header"><div class="tool-icon">🧮</div><div><div class="tool-name">Chargeback Report Builder</div><div class="tags"><span class="tag tag-cost">Cost</span></div></div></div>
+      <p class="tool-desc">Generate a cost chargeback CSV from team names and monthly spend  - ready to share with finance or management.</p>
+      <div class="card-cta">Open tool <span class="cta-arrow">&#x2192;</span></div>
+        <div class="tool-panel" id="panel-chargeback">
+        <button class="panel-close" onclick="closePanel('chargeback')">X</button>
+        <div class="panel-title">cost / chargeback-builder</div>
+        <div class="field"><label>Teams and Spend (team:amount, one per line)</label>
+          <textarea id="cb-teams">Platform Engineering:2400
+Data Engineering:1800
+Security:600
+DevOps:900</textarea>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="buildChargeback()">Generate CSV</button>
+          <button class="btn btn-ghost" onclick="copyOut('output-chargeback')">Copy</button>
+        </div>
+        <div class="output" id="output-chargeback"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- REFERENCE -->
+<section class="section" id="tab-ref">
+  <div class="sec-head">
+    <div class="sec-title"><span class="sec-vol">VII</span>Reference</div>
+    <p class="sec-desc">Azure regions, well-known ports, and common service limits for quick lookup.</p>
+  </div>
+  <div class="group">
+    <div class="group-label">Azure Regions</div>
+    <div class="tbl-wrap"><table class="ref-table"><thead><tr><th>Region</th><th>Code</th><th>Abbrev</th><th>Pair</th></tr></thead><tbody id="regions-body"></tbody></table></div>
+  </div>
+  <div class="group" style="margin-top:26px">
+    <div class="group-label">Well-Known Ports</div>
+    <div class="field" style="max-width:260px;margin-bottom:10px"><input type="text" id="port-search" placeholder="Search port or service..." oninput="filterPorts()" style="width:100%;background:var(--bg3);border:1px solid var(--border);padding:7px 10px;font-family:var(--mono);font-size:12px;color:var(--ink);outline:none;border-radius:3px"/></div>
+    <div class="tbl-wrap"><table class="ref-table"><thead><tr><th>Port</th><th>Protocol</th><th>Service</th><th>Cloud Relevance</th></tr></thead><tbody id="ports-body"></tbody></table></div>
+  </div>
+  <div class="group" style="margin-top:26px">
+    <div class="group-label">Common Azure Service Limits</div>
+    <div class="tbl-wrap"><table class="ref-table"><thead><tr><th>Resource</th><th>Default</th><th>Max</th><th>Notes</th></tr></thead><tbody id="limits-body"></tbody></table></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section" id="tab-about">
+  <div class="sec-head">
+    <div class="sec-title"><span class="sec-vol">About</span>About This Toolkit</div>
+    <p class="sec-desc">Who built it, what it covers, and how to get the most from it.</p>
+  </div>
+  <div class="about-grid">
+    <div>
+      <div class="about-block">
+        <h3>Jane Ologhadien</h3>
+        <p style="font-size:13px;color:#B0BEC5;line-height:1.8;margin-bottom:16px">I built this toolkit while studying Computing and IT, learning cloud infrastructure hands-on. Every tool came from a real problem I hit while working through Azure, AWS, Kubernetes, or IaC  - things I needed to look up constantly, so I built a single place to find them.</p>
+        <p style="font-size:13px;color:#B0BEC5;line-height:1.8;margin-bottom:16px">The toolkit is deliberately multi-cloud. Cloud engineers rarely work with just one provider, and the tools here reflect that.</p>
+        <h3 style="margin-top:22px">Currently Studying</h3>
+        <ul class="skill-list">
+          <li>Computing and IT, The Open University.</li>
+          <li>Azure, AWS, and GCP cloud fundamentals.</li>
+          <li>Infrastructure as Code with Bicep and Terraform.</li>
+          <li>Kubernetes and container orchestration.</li>
+          <li>Bash, PowerShell, and Python for cloud automation.</li>
+          <li>Cloud security and network design.</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <div class="about-block">
+        <h3>What This Toolkit Covers</h3>
+        <ul class="skill-list">
+          <li>Multi-cloud service mapping across Azure, AWS, and GCP.</li>
+          <li>Resource naming conventions for all three clouds.</li>
+          <li>CIDR subnet math, overlap detection, and VPC/VNet planning.</li>
+          <li>Terraform modules and remote backends for all three clouds.</li>
+          <li>CI/CD pipelines for Bicep and Terraform with OIDC.</li>
+          <li>Kubernetes deployment manifests, Helm charts, and AKS/EKS/GKE sizing.</li>
+          <li>Bash, PowerShell, and Python automation snippets.</li>
+          <li>Cloud cost, reserved pricing, and budget alert tools.</li>
+        </ul>
+        <h3 style="margin-top:22px">Who It Is For</h3>
+        <ul class="skill-list">
+          <li>Cloud and platform engineers working across providers.</li>
+          <li>Students learning cloud infrastructure and IaC.</li>
+          <li>DevOps engineers setting up pipelines and landing zones.</li>
+          <li>Anyone studying for cloud certifications.</li>
+        </ul>
+        <div style="margin-top:20px;padding:13px 15px;border:1px solid var(--border);border-left:3px solid var(--sky);font-family:var(--mono);font-size:11.5px;color:var(--ink3);line-height:1.8">
+          All tools run entirely in the browser.<br>
+          Nothing is stored. No account needed.<br>
+          <span style="color:var(--sky2);margin-top:5px;display:block">Free to use and share.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer>
+  <div class="ft-left">
+    <div>Built in the UK.</div>
+    <div style="margin-top:5px"><a href="https://learn.microsoft.com/azure/" target="_blank">Azure Docs</a> · <a href="https://docs.aws.amazon.com/" target="_blank">AWS Docs</a> · <a href="https://cloud.google.com/docs" target="_blank">GCP Docs</a></div>
+    <div><a href="https://registry.terraform.io/" target="_blank">Terraform Registry</a> · <a href="https://kubernetes.io/docs/" target="_blank">K8s Docs</a></div>
+  </div>
+  <div class="ft-center">
+    <div class="ft-mark">Cloud Toolkit</div>
+    <div class="ft-tagline">Multi-Cloud Engineering Reference</div>
+  </div>
+  <div class="ft-right">
+    <div>Free to use. No sign-up required.</div>
+    <div>All tools run in-browser.</div>
+    <div style="margin-top:5px;color:var(--sky2)">Tools for engineers, built by an engineer.</div>
+  </div>
+</footer>
+</div>
+<div id="toast"></div>
+<script>
+/* ====== UTILS ====== */
+function i2l(ip){return ip.split('.').reduce(function(a,o){return(a<<8)+parseInt(o,10);},0)>>>0;}
+function l2i(n){return[(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255].join('.');}
+function parseC(cidr){var p=cidr.trim().split('/');var prefix=parseInt(p[1],10);var mask=prefix===0?0:(~0<<(32-prefix))>>>0;var net=(i2l(p[0])&mask)>>>0;return{prefix:prefix,mask:mask,net:net};}
+function show(id,txt){var el=document.getElementById(id);if(!el)return;el.textContent=txt;el.classList.add('visible');}
+function copyOut(id){var el=document.getElementById(id);if(!el)return;navigator.clipboard.writeText(el.textContent).then(function(){toast('Copied to clipboard.');});}
+function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2200);}
+
+/* ====== PANEL TOGGLE ====== */
+var activePanel=null;
+document.addEventListener('click',function(e){
+  var card=e.target.closest('.tool-card');
+  if(!card)return;
+  var tag=e.target.tagName;
+  if(e.target.closest('.tool-panel')||tag==='BUTTON'||tag==='INPUT'||tag==='SELECT'||tag==='TEXTAREA'||tag==='LABEL')return;
+  var tool=card.dataset.tool;if(!tool)return;
+  var panel=document.getElementById('panel-'+tool);if(!panel)return;
+  if(activePanel&&activePanel!==panel)activePanel.classList.remove('open');
+  panel.classList.toggle('open');
+  activePanel=panel.classList.contains('open')?panel:null;
+  if(panel.classList.contains('open'))setTimeout(function(){panel.scrollIntoView({behavior:'smooth',block:'nearest'});},60);
+});
+function closePanel(id){var p=document.getElementById('panel-'+id);if(p)p.classList.remove('open');activePanel=null;}
+
+/* ====== TABS ====== */
+document.getElementById('nav-tabs').addEventListener('click',function(e){
+  var tab=e.target.closest('.nav-tab');if(!tab)return;
+  document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active');});
+  tab.classList.add('active');
+  document.getElementById('tab-'+tab.dataset.tab).classList.add('active');
+  if(activePanel){activePanel.classList.remove('open');activePanel=null;}
+});
+
+/* ====== SEARCH ====== */
+document.getElementById('search').addEventListener('input',function(e){
+  var q=e.target.value.toLowerCase().trim();
+  document.querySelectorAll('.tool-card').forEach(function(c){
+    if(!q){c.classList.remove('hidden');return;}
+    var txt=((c.querySelector('.tool-name')||{}).textContent||'')+' '+((c.querySelector('.tool-desc')||{}).textContent||'');
+    c.classList.toggle('hidden',txt.toLowerCase().indexOf(q)===-1);
+  });
+});
+
+/* ====== CLOUD TAB SWITCHERS ====== */
+function switchCloud(prefix,cloud,btn){
+  ['az','aws','gcp','all'].forEach(function(c){
+    var el=document.getElementById(prefix+'-'+c);
+    if(el)el.classList.toggle('visible',c===cloud);
+  });
+  btn.parentElement.querySelectorAll('.ctab').forEach(function(b){
+    b.className='ctab';
+  });
+  btn.classList.add('active-'+cloud);
+}
+function switchNamingCloud(c,b){switchCloud('naming',c,b);}
+function switchVnetCloud(c,b){currentVnetCloud=c;/* cloud affects output label */}
+function switchFwCloud(c,b){currentFwCloud=c;b.parentElement.querySelectorAll('.ctab').forEach(function(x){x.className='ctab';});b.classList.add('active-'+c);}
+function switchTfCloud(c,b){currentTfCloud=c;b.parentElement.querySelectorAll('.ctab').forEach(function(x){x.className='ctab';});b.classList.add('active-'+c);}
+function switchBackendCloud(c,b){
+  ['az','aws','gcp'].forEach(function(x){var el=document.getElementById('backend-'+x);if(el)el.classList.toggle('visible',x===c);});
+  b.parentElement.querySelectorAll('.ctab').forEach(function(x){x.className='ctab';});
+  b.classList.add('active-'+c);currentBackendCloud=c;
+}
+function switchSkuCloud(c,b){currentSkuCloud=c;b.parentElement.querySelectorAll('.ctab').forEach(function(x){x.className='ctab';});b.classList.add('active-'+c);}
+function switchPoolCloud(c,b){currentPoolCloud=c;b.parentElement.querySelectorAll('.ctab').forEach(function(x){x.className='ctab';});b.classList.add('active-'+c);}
+function switchCliSetup(c,b){
+  b.parentElement.querySelectorAll('.ctab').forEach(function(x){x.className='ctab';});
+  b.classList.add('active-'+c);
+  renderCliSetup(c);
+}
+var currentVnetCloud='az',currentFwCloud='az',currentTfCloud='az',currentBackendCloud='az',currentSkuCloud='all',currentPoolCloud='az';
+
+/* ====== DATA ====== */
+var CLOUD_SERVICES=[
+  {cat:'compute',concept:'Virtual Machine',az:'Azure VM (D/F/E series)',aws:'EC2 (t3, m6i, c6i)',gcp:'Compute Engine (e2, n2, c2)'},
+  {cat:'compute',concept:'Serverless Functions',az:'Azure Functions',aws:'AWS Lambda',gcp:'Cloud Functions / Cloud Run'},
+  {cat:'compute',concept:'Container Platform',az:'Azure Container Apps',aws:'ECS / Fargate',gcp:'Cloud Run'},
+  {cat:'compute',concept:'PaaS App Hosting',az:'Azure App Service',aws:'Elastic Beanstalk',gcp:'App Engine'},
+  {cat:'compute',concept:'Batch / HPC Jobs',az:'Azure Batch',aws:'AWS Batch',gcp:'Cloud Batch'},
+  {cat:'storage',concept:'Object Storage',az:'Azure Blob Storage',aws:'S3',gcp:'Cloud Storage (GCS)'},
+  {cat:'storage',concept:'File Storage',az:'Azure Files (SMB/NFS)',aws:'EFS / FSx',gcp:'Filestore'},
+  {cat:'storage',concept:'Block Storage (Disks)',az:'Azure Managed Disks',aws:'EBS',gcp:'Persistent Disk'},
+  {cat:'storage',concept:'Archive / Cold Storage',az:'Archive tier (Blob)',aws:'S3 Glacier',gcp:'Coldline / Archive'},
+  {cat:'storage',concept:'CDN',az:'Azure Front Door / CDN',aws:'CloudFront',gcp:'Cloud CDN'},
+  {cat:'database',concept:'Relational (managed)',az:'Azure SQL / PostgreSQL / MySQL',aws:'RDS (Aurora)',gcp:'Cloud SQL / AlloyDB'},
+  {cat:'database',concept:'NoSQL Document',az:'Cosmos DB (SQL API)',aws:'DynamoDB',gcp:'Firestore'},
+  {cat:'database',concept:'In-Memory Cache',az:'Azure Cache for Redis',aws:'ElastiCache (Redis)',gcp:'Memorystore'},
+  {cat:'database',concept:'Data Warehouse',az:'Azure Synapse Analytics',aws:'Redshift',gcp:'BigQuery'},
+  {cat:'database',concept:'Search',az:'Azure AI Search',aws:'OpenSearch Service',gcp:'Vertex AI Search'},
+  {cat:'networking',concept:'Virtual Network',az:'VNet',aws:'VPC',gcp:'VPC Network'},
+  {cat:'networking',concept:'Subnet',az:'Subnet',aws:'Subnet (public/private)',gcp:'Subnetwork'},
+  {cat:'networking',concept:'DNS',az:'Azure DNS',aws:'Route 53',gcp:'Cloud DNS'},
+  {cat:'networking',concept:'Load Balancer (L4)',az:'Azure Load Balancer',aws:'NLB',gcp:'TCP/UDP Load Balancing'},
+  {cat:'networking',concept:'Load Balancer (L7)',az:'Application Gateway / Front Door',aws:'ALB',gcp:'HTTP(S) Load Balancing'},
+  {cat:'networking',concept:'Private Connectivity',az:'Private Link / VNet Peering',aws:'VPC Peering / PrivateLink',gcp:'VPC Peering / PSC'},
+  {cat:'networking',concept:'Site-to-Site VPN',az:'VPN Gateway',aws:'Site-to-Site VPN',gcp:'Cloud VPN'},
+  {cat:'networking',concept:'Dedicated Connectivity',az:'ExpressRoute',aws:'Direct Connect',gcp:'Cloud Interconnect'},
+  {cat:'iam',concept:'Identity / Auth',az:'Azure Active Directory (Entra ID)',aws:'IAM + Cognito',gcp:'Cloud Identity / IAM'},
+  {cat:'iam',concept:'Service Identity',az:'Managed Identity',aws:'IAM Role (EC2/Lambda)',gcp:'Service Account'},
+  {cat:'iam',concept:'Secret Management',az:'Key Vault',aws:'Secrets Manager / SSM',gcp:'Secret Manager'},
+  {cat:'iam',concept:'Policy as Code',az:'Azure Policy',aws:'Service Control Policies (SCP)',gcp:'Organization Policy'},
+  {cat:'iam',concept:'Firewall Rules',az:'NSG + Azure Firewall',aws:'Security Groups + NACL',gcp:'VPC Firewall Rules + Cloud Armor'},
+  {cat:'containers',concept:'Managed Kubernetes',az:'AKS',aws:'EKS',gcp:'GKE'},
+  {cat:'containers',concept:'Container Registry',az:'Azure Container Registry (ACR)',aws:'ECR',gcp:'Artifact Registry'},
+  {cat:'containers',concept:'Kubernetes RBAC Auth',az:'Azure AD + AKS RBAC',aws:'IAM + EKS RBAC',gcp:'Workload Identity + GKE RBAC'},
+  {cat:'serverless',concept:'Event Bus / Messaging',az:'Service Bus / Event Grid',aws:'SNS / SQS / EventBridge',gcp:'Pub/Sub / Eventarc'},
+  {cat:'serverless',concept:'API Gateway',az:'API Management (APIM)',aws:'API Gateway',gcp:'Cloud Endpoints / API Gateway'},
+  {cat:'serverless',concept:'Workflow Orchestration',az:'Logic Apps / Durable Functions',aws:'Step Functions',gcp:'Workflows'},
+  {cat:'monitoring',concept:'Metrics & Monitoring',az:'Azure Monitor',aws:'CloudWatch',gcp:'Cloud Monitoring'},
+  {cat:'monitoring',concept:'Logging',az:'Log Analytics (KQL)',aws:'CloudWatch Logs',gcp:'Cloud Logging'},
+  {cat:'monitoring',concept:'Distributed Tracing',az:'Application Insights',aws:'X-Ray',gcp:'Cloud Trace'},
+  {cat:'monitoring',concept:'Infrastructure as Dashboard',az:'Azure Monitor Workbooks',aws:'CloudWatch Dashboards',gcp:'Cloud Monitoring Dashboards'},
+  {cat:'cicd',concept:'CI/CD Service',az:'Azure DevOps / GitHub Actions',aws:'CodePipeline + CodeBuild',gcp:'Cloud Build'},
+  {cat:'cicd',concept:'Artifact / Package Store',az:'Azure Artifacts',aws:'CodeArtifact',gcp:'Artifact Registry'},
+  {cat:'cicd',concept:'Infrastructure Deployment',az:'Bicep + ARM / Terraform',aws:'CloudFormation / Terraform',gcp:'Deployment Manager / Terraform'},
+];
+
+var IAM_DATA=[
+  {concept:'User Identity',az:'Azure AD / Entra ID User',aws:'IAM User (avoid in prod)',gcp:'Google Identity User'},
+  {concept:'Machine Identity',az:'Managed Identity (system or user)',aws:'IAM Role attached to resource',gcp:'Service Account'},
+  {concept:'Permission Unit',az:'Role (built-in or custom)',aws:'Policy (JSON document)',gcp:'Role (predefined or custom)'},
+  {concept:'Assignment',az:'Role Assignment (RBAC)',aws:'Policy attached to principal',gcp:'IAM Binding (member + role)'},
+  {concept:'Scope',az:'Sub > RG > Resource',aws:'Account > OU > Resource ARN',gcp:'Org > Folder > Project > Resource'},
+  {concept:'Temp Credentials',az:'Workload Identity Federation',aws:'STS AssumeRole',gcp:'Workload Identity Federation'},
+  {concept:'Policy Hierarchy',az:'Management Group > Sub > RG',aws:'Org SCP > Account > Resource',gcp:'Org Policy > Folder > Project'},
+  {concept:'Secrets Store',az:'Key Vault',aws:'Secrets Manager / Parameter Store',gcp:'Secret Manager'},
+  {concept:'CI/CD Auth (OIDC)',az:'OIDC with Managed Identity (client-id / tenant-id)',aws:'OIDC with STS (role ARN)',gcp:'Workload Identity Pool'},
+  {concept:'Least Privilege Best Practice',az:'Managed Identity + specific RBAC role at narrowest scope',aws:'IAM Role with condition keys and resource ARN',gcp:'Service Account with predefined role at project level'},
+];
+
+var CLI_DATA=[
+  {op:'Login / Authenticate',az:'az login',aws:'aws configure',gcp:'gcloud auth login'},
+  {op:'Set active account / profile',az:'az account set --subscription <id>',aws:'aws configure --profile <name>',gcp:'gcloud config set project <id>'},
+  {op:'List compute instances / VMs',az:'az vm list -o table',aws:'aws ec2 describe-instances --output table',gcp:'gcloud compute instances list'},
+  {op:'Create a resource group / project',az:'az group create -n myRG -l uksouth',aws:'aws ec2 create-vpc --cidr-block 10.0.0.0/16',gcp:'gcloud projects create my-project'},
+  {op:'List storage accounts / buckets',az:'az storage account list -o table',aws:'aws s3 ls',gcp:'gcloud storage buckets list'},
+  {op:'Upload file to storage',az:'az storage blob upload --account-name st --container c --file f.txt --name f.txt',aws:'aws s3 cp f.txt s3://bucket/',gcp:'gcloud storage cp f.txt gs://bucket/'},
+  {op:'Get Kubernetes credentials',az:'az aks get-credentials -g RG -n cluster',aws:'aws eks update-kubeconfig --name cluster',gcp:'gcloud container clusters get-credentials cluster --zone zone'},
+  {op:'List K8s node pools',az:'az aks nodepool list -g RG -n cluster -o table',aws:'aws eks list-nodegroups --cluster-name cluster',gcp:'gcloud container node-pools list --cluster cluster'},
+  {op:'Deploy infrastructure',az:'az deployment sub create --template-file main.bicep',aws:'aws cloudformation deploy --template-file template.yaml',gcp:'gcloud deployment-manager deployments create d --config config.yaml'},
+  {op:'List IAM roles / policies',az:'az role assignment list -o table',aws:'aws iam list-roles',gcp:'gcloud projects get-iam-policy PROJECT_ID'},
+  {op:'Check current costs / billing',az:'az consumption usage list --output table',aws:'aws ce get-cost-and-usage --time-period Start=2024-01-01,End=2024-01-31 --granularity MONTHLY --metrics BlendedCost',gcp:'gcloud billing accounts list'},
+  {op:'Scale a deployment (K8s)',az:'kubectl scale deploy <name> --replicas=5',aws:'kubectl scale deploy <name> --replicas=5',gcp:'kubectl scale deploy <name> --replicas=5'},
+  {op:'Delete a resource group / stack',az:'az group delete -n myRG --yes',aws:'aws cloudformation delete-stack --stack-name myStack',gcp:'gcloud projects delete my-project'},
+  {op:'View logs',az:'az monitor activity-log list -o table',aws:'aws logs get-log-events --log-group-name /aws/lambda/fn',gcp:'gcloud logging read "resource.type=gce_instance"'},
+  {op:'Tag a resource',az:'az resource tag --ids <id> --tags env=prod',aws:'aws ec2 create-tags --resources <id> --tags Key=env,Value=prod',gcp:'gcloud resource-manager tags bindings create --tag-value=env:prod --parent=//compute.googleapis.com/...'},
+];
+
+var REGIONS=[
+  {n:'UK South',c:'uksouth',a:'uks',p:'UK West'},{n:'UK West',c:'ukwest',a:'ukw',p:'UK South'},
+  {n:'North Europe',c:'northeurope',a:'neu',p:'West Europe'},{n:'West Europe',c:'westeurope',a:'weu',p:'North Europe'},
+  {n:'East US',c:'eastus',a:'eus',p:'West US'},{n:'East US 2',c:'eastus2',a:'eus2',p:'Central US'},
+  {n:'West US',c:'westus',a:'wus',p:'East US'},{n:'West US 2',c:'westus2',a:'wus2',p:'West Central US'},
+  {n:'Central US',c:'centralus',a:'cus',p:'East US 2'},{n:'Australia East',c:'australiaeast',a:'ae',p:'Australia SE'},
+  {n:'Southeast Asia',c:'southeastasia',a:'sea',p:'East Asia'},{n:'Japan East',c:'japaneast',a:'jpe',p:'Japan West'},
+  {n:'Canada Central',c:'canadacentral',a:'cac',p:'Canada East'},{n:'Brazil South',c:'brazilsouth',a:'brs',p:'Brazil SE'},
+  {n:'Sweden Central',c:'swedencentral',a:'swc',p:'Sweden South'},{n:'UAE North',c:'uaenorth',a:'uaen',p:'UAE Central'},
+  {n:'South Africa North',c:'southafricanorth',a:'san',p:'South Africa West'}
+];
+
+var LIMITS=[
+  {r:'VNets / subscription',d:'1,000',m:'1,000',n:'Per region'},
+  {r:'NSG rules / NSG',d:'1,000',m:'1,000',n:'Inbound + Outbound combined'},
+  {r:'VM cores / region (default)',d:'20',m:'Requestable',n:'Per VM family'},
+  {r:'Storage Accounts / sub',d:'250',m:'250',n:'Per region'},
+  {r:'Key Vault secrets',d:'25,000',m:'25,000',n:'Per vault'},
+  {r:'AKS nodes / cluster',d:'5,000',m:'5,000',n:'All node pools combined'},
+  {r:'RBAC role assignments / sub',d:'4,000',m:'4,000',n:'Hard limit'},
+  {r:'Resource Groups / sub',d:'980',m:'980',n:'Cannot be increased'},
+];
+
+var PORTS=[
+  {p:'22',pr:'TCP',s:'SSH',r:'Bastion, VM admin, Git over SSH'},
+  {p:'80',pr:'TCP',s:'HTTP',r:'Redirect to 443 only'},
+  {p:'443',pr:'TCP',s:'HTTPS',r:'App Gateway, ALB, GCP Load Balancer'},
+  {p:'3389',pr:'TCP',s:'RDP',r:'Windows VM - restrict to Bastion/Jump host'},
+  {p:'3306',pr:'TCP',s:'MySQL',r:'Azure DB, AWS RDS, Cloud SQL'},
+  {p:'5432',pr:'TCP',s:'PostgreSQL',r:'Azure Flexible, RDS, AlloyDB'},
+  {p:'1433',pr:'TCP',s:'MSSQL',r:'Azure SQL, RDS SQL Server'},
+  {p:'6380',pr:'TCP',s:'Redis TLS',r:'Azure Cache, ElastiCache, Memorystore'},
+  {p:'5671',pr:'TCP',s:'AMQP TLS',r:'Service Bus, Amazon MQ, Pub/Sub (grpc)'},
+  {p:'9093',pr:'TCP',s:'Kafka TLS',r:'Event Hub, MSK, Pub/Sub Kafka'},
+  {p:'6443',pr:'TCP',s:'K8s API',r:'AKS, EKS, GKE API server'},
+  {p:'10250',pr:'TCP',s:'Kubelet',r:'Control plane to node - do not expose'},
+  {p:'53',pr:'UDP/TCP',s:'DNS',r:'Azure DNS, Route 53, Cloud DNS'},
+  {p:'123',pr:'UDP',s:'NTP',r:'Required outbound from all cloud VMs'},
+  {p:'4789',pr:'UDP',s:'VXLAN',r:'K8s overlay networking'},
+  {p:'8080',pr:'TCP',s:'HTTP alt',r:'Health probes, internal APIs'},
+  {p:'8443',pr:'TCP',s:'HTTPS alt',r:'Internal TLS services'},
+  {p:'25',pr:'TCP',s:'SMTP',r:'Blocked outbound by default on all clouds'},
+];
+
+var KUBECTL=[
+  {c:'Context',k:'kubectl config get-contexts',d:'List all kubeconfig contexts'},
+  {c:'Context',k:'kubectl config use-context <name>',d:'Switch active context'},
+  {c:'AKS',k:'az aks get-credentials -g <rg> -n <cluster>',d:'Get AKS credentials'},
+  {c:'EKS',k:'aws eks update-kubeconfig --name <cluster> --region <region>',d:'Get EKS credentials'},
+  {c:'GKE',k:'gcloud container clusters get-credentials <cluster> --zone <zone>',d:'Get GKE credentials'},
+  {c:'Nodes',k:'kubectl get nodes -o wide',d:'List nodes with IPs and OS'},
+  {c:'Nodes',k:'kubectl top nodes',d:'CPU/memory per node (needs metrics-server)'},
+  {c:'Pods',k:'kubectl get pods -n <ns> -o wide',d:'List pods with node and IP'},
+  {c:'Pods',k:'kubectl logs <pod> -n <ns> --tail=100 -f',d:'Follow pod logs'},
+  {c:'Pods',k:'kubectl exec -it <pod> -- /bin/sh',d:'Shell into a running pod'},
+  {c:'Pods',k:'kubectl describe pod <pod> -n <ns>',d:'Full pod detail and events'},
+  {c:'Pods',k:'kubectl top pods -n <ns>',d:'CPU/memory per pod'},
+  {c:'Deploy',k:'kubectl rollout status deploy/<name>',d:'Watch rollout progress'},
+  {c:'Deploy',k:'kubectl rollout undo deploy/<name>',d:'Roll back to previous revision'},
+  {c:'Deploy',k:'kubectl scale deploy <name> --replicas=5',d:'Scale a deployment'},
+  {c:'Deploy',k:'kubectl set image deploy/<name> app=<img>:<tag>',d:'Update container image'},
+  {c:'Services',k:'kubectl get svc -n <ns>',d:'List services and IPs'},
+  {c:'Services',k:'kubectl port-forward svc/<svc> 8080:80',d:'Forward local port to a service'},
+  {c:'Debug',k:'kubectl get events -n <ns> --sort-by=.lastTimestamp',d:'Events sorted by time'},
+  {c:'Debug',k:'kubectl run debug --image=nicolaka/netshoot -it --rm',d:'Network debug pod'},
+  {c:'Debug',k:'kubectl get pod <pod> -o yaml',d:'Full pod spec as YAML'},
+];
+
+var NP={rg:'rg-',vnet:'vnet-',snet:'snet-',nsg:'nsg-',pip:'pip-',vm:'vm',st:'st',kv:'kv-',acr:'cr',aks:'aks-',func:'func-',sql:'sql-',id:'id-'};
+var NMAX={st:24,vm:15,acr:50,kv:24};
+
+var VNET_P={
+  hub:[{n:'GatewaySubnet',b:27,t:'VPN/ER Gateway - must be /27+'},{n:'AzureFirewallSubnet',b:26,t:'Azure Firewall - exactly /26'},{n:'AzureBastionSubnet',b:26,t:'Azure Bastion - /26'},{n:'snet-management',b:27,t:'Jump hosts, management tools'},{n:'snet-shared-services',b:25,t:'DNS, NTP, monitoring agents'}],
+  spoke:[{n:'snet-app',b:24,t:'Application tier'},{n:'snet-data',b:25,t:'Database and data tier'},{n:'snet-privateendpoints',b:26,t:'Private Endpoints only'},{n:'snet-integration',b:26,t:'App Service VNet Integration'}],
+  aks:[{n:'snet-aks-nodes',b:22,t:'AKS node VMs - size generously'},{n:'snet-aks-pods',b:16,t:'Pod CIDR (Azure CNI Overlay)'},{n:'snet-aks-services',b:24,t:'Kubernetes service CIDR'},{n:'snet-aks-api-server',b:28,t:'Private API server subnet'},{n:'snet-privateendpoints',b:26,t:'PaaS Private Endpoints'}],
+  mgmt:[{n:'snet-monitoring',b:27,t:'Prometheus, Grafana, collectors'},{n:'snet-automation',b:27,t:'Runbooks, Ansible, pipelines'},{n:'snet-devops-agents',b:26,t:'Self-hosted build/deploy agents'}],
+  'aws-3tier':[{n:'sn-public-a',b:24,t:'Public subnet AZ-a (ALB, NAT GW)'},{n:'sn-public-b',b:24,t:'Public subnet AZ-b (HA pair)'},{n:'sn-app-a',b:23,t:'Private app subnet AZ-a'},{n:'sn-app-b',b:23,t:'Private app subnet AZ-b'},{n:'sn-data-a',b:25,t:'Private data subnet AZ-a (RDS)'},{n:'sn-data-b',b:25,t:'Private data subnet AZ-b (RDS standby)'}]
+};
+
+/* ====== CLOUD COMPARE ====== */
+function renderCloudCompare(){
+  var cat=document.getElementById('cc-cat').value;
+  var data=cat==='all'?CLOUD_SERVICES:CLOUD_SERVICES.filter(function(r){return r.cat===cat;});
+  document.getElementById('cc-body').innerHTML=data.map(function(r){
+    return '<tr><td>'+r.concept+'</td><td>'+r.az+'</td><td>'+r.aws+'</td><td>'+r.gcp+'</td></tr>';
+  }).join('');
+}
+renderCloudCompare();
+
+/* ====== IAM COMPARE ====== */
+document.getElementById('iam-body').innerHTML=IAM_DATA.map(function(r){
+  return '<tr><td>'+r.concept+'</td><td>'+r.az+'</td><td>'+r.aws+'</td><td>'+r.gcp+'</td></tr>';
+}).join('');
+
+/* ====== CLI COMPARE ====== */
+function renderCliCompare(){
+  var q=(document.getElementById('cli-search')||{value:''}).value.toLowerCase();
+  var data=q?CLI_DATA.filter(function(r){return(r.op+r.az+r.aws+r.gcp).toLowerCase().indexOf(q)>=0;}):CLI_DATA;
+  document.getElementById('cli-body').innerHTML=data.map(function(r){
+    return '<tr><td>'+r.op+'</td><td>'+r.az+'</td><td>'+r.aws+'</td><td>'+r.gcp+'</td></tr>';
+  }).join('');
+}
+renderCliCompare();
+
+/* ====== NAMING ====== */
+function generateName(){
+  var type=document.getElementById('naming-type').value;
+  var env=document.getElementById('naming-env').value;
+  var wl=document.getElementById('naming-workload').value.toLowerCase().replace(/[^a-z0-9]/g,'');
+  var reg=document.getElementById('naming-region').value;
+  var inst=document.getElementById('naming-instance')?document.getElementById('naming-instance').value:'001';
+  var suf=document.getElementById('naming-suffix')?document.getElementById('naming-suffix').value.toLowerCase().replace(/[^a-z0-9]/g,''):'';
+  var prefix=NP[type]||type+'-';
+  var parts=[env,wl,reg,inst];if(suf)parts.push(suf);
+  var name=['st','acr'].indexOf(type)>=0?prefix+parts.join(''):prefix+parts.join('-');
+  var max=NMAX[type];var warn='';
+  if(max&&name.length>max){name=name.substring(0,max);warn='\n  Truncated to '+max+' chars (service limit).';}
+  show('output-naming','[Azure CAF]\nName:   '+name+'\nLength: '+name.length+' chars'+(max?' (max '+max+')':'')+warn+'\n\nPattern: <prefix>-<env>-<workload>-<region>-<instance>');
+}
+
+function generateAwsName(){
+  var type=document.getElementById('aws-naming-type').value;
+  var env=document.getElementById('aws-naming-env').value;
+  var app=document.getElementById('aws-naming-app').value.toLowerCase().replace(/[^a-z0-9]/g,'');
+  var reg=document.getElementById('aws-naming-region').value;
+  var prefixes={vpc:'vpc',subnet:'sn',sg:'sg',ec2:'ec2',s3:'',rds:'rds',eks:'eks',lambda:'fn','iam-role':'role',ecr:'ecr'};
+  var prefix=prefixes[type]||type;
+  var name=prefix?(prefix+'-'+env+'-'+app+'-'+reg):(app+'-'+env+'-'+reg+'.your-domain.com');
+  show('output-naming','[AWS Convention]\nName:   '+name+'\nPattern: <type>-<env>-<app>-<region>\n\nNote: S3 bucket names are globally unique and\ncannot contain uppercase letters.');
+}
+
+function generateGcpName(){
+  var type=document.getElementById('gcp-naming-type').value;
+  var env=document.getElementById('gcp-naming-env').value;
+  var app=document.getElementById('gcp-naming-app').value.toLowerCase().replace(/[^a-z0-9]/g,'');
+  var reg=document.getElementById('gcp-naming-region').value;
+  var prefixes={vpc:'vpc',subnet:'sn',firewall:'fw',gce:'vm',gcs:'',gke:'gke',cloudfn:'fn',sa:'sa',sql:'sql',ar:'ar'};
+  var prefix=prefixes[type]||type;
+  var name=prefix?(prefix+'-'+app+'-'+env+'-'+reg):(app+'-'+env+'-'+reg);
+  show('output-naming','[GCP Convention]\nName:   '+name+'\nPattern: <type>-<app>-<env>-<region>\n\nNote: GCP names are globally unique for some resources.\nUse lowercase letters, numbers, and hyphens only.');
+}
+
+/* ====== SKU ADVISOR - multi-cloud ====== */
+function adviseSku(){
+  var mc=parseInt(document.getElementById('sku-vcpu').value,10);
+  var mr=parseInt(document.getElementById('sku-ram').value,10);
+  var wl=document.getElementById('sku-workload').value;
+  var cloud=currentSkuCloud;
+  var AZ={general:[{k:'Standard_B4ms',v:4,r:16,n:'Dev/test'},{k:'Standard_D4s_v5',v:4,r:16,n:'GP prod'},{k:'Standard_D8s_v5',v:8,r:32,n:'GP prod'},{k:'Standard_D16s_v5',v:16,r:64,n:'GP large'},{k:'Standard_D32s_v5',v:32,r:128,n:'GP large scale'}],compute:[{k:'Standard_F4s_v2',v:4,r:8,n:'Compute opt'},{k:'Standard_F8s_v2',v:8,r:16,n:'Compute opt'},{k:'Standard_F16s_v2',v:16,r:32,n:'Compute opt'}],memory:[{k:'Standard_E4s_v5',v:4,r:32,n:'Mem opt'},{k:'Standard_E8s_v5',v:8,r:64,n:'Mem opt'},{k:'Standard_E16s_v5',v:16,r:128,n:'Large DB'}],storage:[{k:'Standard_L8s_v3',v:8,r:64,n:'NVMe SSD'},{k:'Standard_L16s_v3',v:16,r:128,n:'NVMe SSD'}],gpu:[{k:'Standard_NC4as_T4_v3',v:4,r:28,n:'NVIDIA T4'},{k:'Standard_NC24ads_A100_v4',v:24,r:220,n:'NVIDIA A100'}]};
+  var AWS={general:[{k:'t3.xlarge',v:4,r:16,n:'Burstable GP'},{k:'m6i.xlarge',v:4,r:16,n:'GP (Intel)'},{k:'m6i.2xlarge',v:8,r:32,n:'GP (Intel)'},{k:'m6i.4xlarge',v:16,r:64,n:'GP (Intel)'},{k:'m6a.2xlarge',v:8,r:32,n:'GP (AMD, cheaper)'}],compute:[{k:'c6i.xlarge',v:4,r:8,n:'Compute opt'},{k:'c6i.2xlarge',v:8,r:16,n:'Compute opt'},{k:'c6i.4xlarge',v:16,r:32,n:'Compute opt'}],memory:[{k:'r6i.xlarge',v:4,r:32,n:'Mem opt'},{k:'r6i.2xlarge',v:8,r:64,n:'Mem opt'},{k:'r6i.4xlarge',v:16,r:128,n:'Mem opt'}],storage:[{k:'i3.2xlarge',v:8,r:61,n:'NVMe SSD'},{k:'i3.4xlarge',v:16,r:122,n:'NVMe SSD'}],gpu:[{k:'g4dn.xlarge',v:4,r:16,n:'NVIDIA T4'},{k:'p3.2xlarge',v:8,r:61,n:'NVIDIA V100'}]};
+  var GCP={general:[{k:'e2-standard-4',v:4,r:16,n:'GP balanced'},{k:'n2-standard-4',v:4,r:16,n:'GP (Intel)'},{k:'n2-standard-8',v:8,r:32,n:'GP (Intel)'},{k:'n2-standard-16',v:16,r:64,n:'GP (Intel)'}],compute:[{k:'c2-standard-4',v:4,r:16,n:'Compute opt'},{k:'c2-standard-8',v:8,r:32,n:'Compute opt'},{k:'c2d-standard-8',v:8,r:32,n:'Compute opt (AMD)'}],memory:[{k:'n2-highmem-4',v:4,r:32,n:'Mem opt'},{k:'n2-highmem-8',v:8,r:64,n:'Mem opt'},{k:'n2-highmem-16',v:16,r:128,n:'Mem opt'}],storage:[{k:'n2-standard-8 + local SSD',v:8,r:32,n:'Local SSD'},{k:'n2-standard-16 + local SSD',v:16,r:64,n:'Local SSD'}],gpu:[{k:'n1-standard-4 + T4',v:4,r:15,n:'NVIDIA T4'},{k:'a2-highgpu-1g',v:12,r:85,n:'NVIDIA A100'}]};
+  var output='';
+  var clouds=cloud==='all'?['az','aws','gcp']:[cloud];
+  var names={az:'Azure',aws:'AWS',gcp:'GCP'};
+  var dbs={az:AZ,aws:AWS,gcp:GCP};
+  clouds.forEach(function(cl){
+    var db=dbs[cl][wl]||dbs[cl].general;
+    var list=db.filter(function(s){return s.v>=mc&&s.r>=mr;});
+    output+='['+names[cl]+']\n';
+    if(!list.length){output+='  No matching '+wl+' types for >='+mc+' vCPU / >='+mr+' GiB.\n\n';return;}
+    output+=list.slice(0,4).map(function(s){return'  '+s.k+'\n    vCPU: '+s.v+'  RAM: '+s.r+' GiB  | '+s.n;}).join('\n');
+    output+='\n\n';
+  });
+  show('output-skucalc',output.trim());
+}
+
+/* ====== CIDR TOOLS ====== */
+function calcCidr(){
+  var inp=document.getElementById('cidr-input').value.trim();
+  var p;try{p=parseC(inp);}catch(e){show('output-cidrinfo','Invalid CIDR block.');return;}
+  var bc=(p.net|~p.mask)>>>0;var first=(p.net+1)>>>0;var last=(bc-1)>>>0;
+  var total=Math.pow(2,32-p.prefix);var usable=Math.max(0,total-2);
+  var ss=document.getElementById('cidr-stats');
+  ss.style.display='grid';
+  ss.innerHTML='<div class="stat-card"><div class="stat-lbl">Network</div><div class="stat-val" style="font-size:12px">'+l2i(p.net)+'</div></div>'+'<div class="stat-card"><div class="stat-lbl">Broadcast</div><div class="stat-val" style="font-size:12px">'+l2i(bc)+'</div></div>'+'<div class="stat-card"><div class="stat-lbl">Usable Hosts</div><div class="stat-val">'+usable.toLocaleString()+'</div></div>'+'<div class="stat-card"><div class="stat-lbl">Subnet Mask</div><div class="stat-val" style="font-size:12px">'+l2i(p.mask)+'</div></div>';
+  show('output-cidrinfo','Network:       '+l2i(p.net)+'\nBroadcast:     '+l2i(bc)+'\nSubnet Mask:   '+l2i(p.mask)+'\nPrefix:        /'+p.prefix+'\nFirst Usable:  '+l2i(first)+'\nLast Usable:   '+l2i(last)+'\nTotal IPs:     '+total.toLocaleString()+'\nUsable Hosts:  '+usable.toLocaleString()+'\nAzure Usable:  '+Math.max(0,usable-3).toLocaleString()+'  (-3 for Azure reserved)\nAWS Usable:    '+Math.max(0,usable-4).toLocaleString()+'  (-4 for AWS reserved in each subnet)\nWildcard Mask: '+l2i(~p.mask>>>0));
+}
+function splitCidr(){
+  var par=document.getElementById('split-cidr').value.trim();
+  var tgt=parseInt(document.getElementById('split-prefix').value,10);
+  var p;try{p=parseC(par);}catch(e){show('output-cidrsplit','Invalid CIDR.');return;}
+  if(tgt<=p.prefix){show('output-cidrsplit','Target prefix must be larger than parent prefix.');return;}
+  var count=Math.pow(2,tgt-p.prefix);
+  if(count>4096){show('output-cidrsplit','Would produce '+count.toLocaleString()+' subnets. Narrow the target prefix.');return;}
+  var sz=Math.pow(2,32-tgt);
+  var lines=['Splitting '+par+' into /'+tgt+' subnets ('+count+' total)\n'+'-'.repeat(40)+'\n'];
+  for(var i=0;i<count;i++){var net=(p.net+i*sz)>>>0;lines.push(l2i(net)+'/'+tgt);}
+  show('output-cidrsplit',lines.join('\n'));
+}
+function detectOverlap(){
+  var lines=document.getElementById('overlap-cidrs').value.trim().split('\n').filter(Boolean);
+  var parsed=[];
+  lines.forEach(function(l){try{var p=parseC(l.trim());var bc=(p.net|~p.mask)>>>0;parsed.push({cidr:l.trim(),net:p.net,bc:bc});}catch(e){}});
+  var overlaps=[];
+  for(var i=0;i<parsed.length;i++)for(var j=i+1;j<parsed.length;j++){var a=parsed[i];var b=parsed[j];if(a.net<=b.bc&&b.net<=a.bc)overlaps.push('OVERLAP:  '+a.cidr+'  <->  '+b.cidr);}
+  show('output-overlap',overlaps.length?'Found '+overlaps.length+' overlap(s):\n\n'+overlaps.join('\n'):('No overlaps detected among '+parsed.length+' CIDR blocks.'));
+}
+function checkIp(){
+  var ip=document.getElementById('ipc-ip').value.trim();
+  var cidr=document.getElementById('ipc-cidr').value.trim();
+  try{var p=parseC(cidr);var inNet=(i2l(ip)&p.mask)>>>0===p.net;show('output-ipcheck',inNet?'YES - '+ip+' is within '+cidr+'\n\nNetwork:   '+l2i(p.net)+'/'+p.prefix+'\nBroadcast: '+l2i((p.net|~p.mask)>>>0):'NO - '+ip+' is NOT within '+cidr+'\n\nNetwork:   '+l2i(p.net)+'/'+p.prefix);}
+  catch(e){show('output-ipcheck','Invalid IP or CIDR block.');}
+}
+
+/* ====== VNET PLANNER - multi-cloud ====== */
+function planVnet(){
+  var cidrStr=document.getElementById('vnet-cidr').value.trim();
+  var pat=document.getElementById('vnet-pattern').value;
+  var cl=currentVnetCloud;
+  var parsed;try{parsed=parseC(cidrStr);}catch(e){show('output-vnetplan','Invalid CIDR block.');return;}
+  var subnets=VNET_P[pat];var current=parsed.net;
+  var label={az:'Azure VNet',aws:'AWS VPC',gcp:'GCP VPC'};
+  var lines=['['+label[cl]+'] '+cidrStr+'\n'+'-'.repeat(50)+'\n'];
+  subnets.forEach(function(s){
+    var sm=s.b===0?0:(~0<<(32-s.b))>>>0;var al=((current+sm)&sm)>>>0;var bc=(al|~sm)>>>0;
+    var hosts=Math.max(0,Math.pow(2,32-s.b)-(cl==='aws'?5:5));
+    lines.push((s.n).padEnd(32)+' '+l2i(al)+'/'+s.b);
+    lines.push('  '+hosts.toLocaleString()+' usable hosts | '+s.t+'\n');
+    current=(bc+1)>>>0;
+  });
+  if(cl==='aws')lines.push('Note: AWS reserves 5 IPs per subnet (first 4 + broadcast).');
+  if(cl==='az')lines.push('Note: Azure reserves 5 IPs per subnet (first 4 + broadcast).');
+  if(cl==='gcp')lines.push('Note: GCP reserves 4 IPs per subnet (network, default gateway, second-to-last, broadcast).');
+  show('output-vnetplan',lines.join('\n'));
+}
+
+/* ====== FIREWALL RULE BUILDER ====== */
+function buildNsg(){
+  var name=document.getElementById('nsg-name').value;
+  var pri=document.getElementById('nsg-priority').value;
+  var dir=document.getElementById('nsg-dir').value;
+  var acc=document.getElementById('nsg-access').value;
+  var prt=document.getElementById('nsg-proto').value;
+  var port=document.getElementById('nsg-port').value;
+  var src=document.getElementById('nsg-src').value;
+  var fmt=document.getElementById('nsg-format').value;
+  var out='';
+  if(fmt==='bicep'){out="// Azure NSG Rule - Bicep\n{\n  name: '"+name+"'\n  properties: {\n    priority:                  "+pri+"\n    direction:                 '"+dir+"'\n    access:                    '"+acc+"'\n    protocol:                  '"+prt+"'\n    sourcePortRange:           '*'\n    destinationPortRange:      '"+port+"'\n    sourceAddressPrefix:       '"+src+"'\n    destinationAddressPrefix:  '*'\n  }\n}";}
+  else if(fmt==='arm'){out='// Azure NSG Rule - ARM JSON\n{\n  "name": "'+name+'",\n  "properties": {\n    "priority": '+pri+',\n    "direction": "'+dir+'",\n    "access": "'+acc+'",\n    "protocol": "'+prt+'",\n    "sourcePortRange": "*",\n    "destinationPortRange": "'+port+'",\n    "sourceAddressPrefix": "'+src+'"\n  }\n}';}
+  else if(fmt==='terraform'){out='// Terraform HCL (Azure / AWS / GCP)\nresource "azurerm_network_security_rule" "'+name+'" {\n  name                        = "'+name+'"\n  priority                    = '+pri+'\n  direction                   = "'+dir+'"\n  access                      = "'+acc+'"\n  protocol                    = "'+prt+'"\n  source_port_range           = "*"\n  destination_port_range      = "'+port+'"\n  source_address_prefix       = "'+src+'"\n  destination_address_prefix  = "*"\n}\n\n# AWS equivalent\nresource "aws_security_group_rule" "'+name+'" {\n  type        = "'+(dir==='Inbound'?'ingress':'egress')+'"\n  from_port   = '+port+'\n  to_port     = '+port+'\n  protocol    = "'+prt+'"\n  cidr_blocks = ["'+src+'"]\n}\n\n# GCP equivalent\nresource "google_compute_firewall" "'+name+'" {\n  name    = "'+name+'"\n  network = "default"\n  direction = "'+(dir==='Inbound'?'INGRESS':'EGRESS')+'"\n  allow { protocol = "'+prt+'"; ports = ["'+port+'"] }\n  source_ranges = ["'+src+'"]\n}';}
+  else if(fmt==='awscli'){out='# AWS CLI - Security Group Rule\naws ec2 authorize-security-group-'+(dir==='Inbound'?'ingress':'egress')+' \\\n  --group-id sg-xxxxxxxxxxxxxxxxx \\\n  --protocol '+prt+' \\\n  --port '+port+' \\\n  --cidr '+src;
+}
+  else if(fmt==='gcpcli'){out='# GCP - Cloud Firewall Rule\ngcloud compute firewall-rules create '+name+' \\\n  --direction '+(dir==='Inbound'?'INGRESS':'EGRESS')+' \\\n  --action '+(acc==='Allow'?'ALLOW':'DENY')+' \\\n  --rules '+prt+':'+port+' \\\n  --source-ranges '+src+' \\\n  --priority '+pri;}
+  show('output-nsg',out);
+}
+
+/* ====== IaC TOOLS ====== */
+function scaffoldBicep(){
+  var res=document.getElementById('bicep-resource').value;
+  var name=document.getElementById('bicep-name').value;
+  var T={
+    storageAccount:"@description('Storage Account')\nparam location string = resourceGroup().location\nparam name string\nparam sku string = 'Standard_LRS'\nparam tags object = {}\nresource st 'Microsoft.Storage/storageAccounts@2023-01-01' = {\n  name: name\n  location: location\n  tags: tags\n  kind: 'StorageV2'\n  sku: { name: sku }\n  properties: {\n    accessTier: 'Hot'\n    supportsHttpsTrafficOnly: true\n    minimumTlsVersion: 'TLS1_2'\n    allowBlobPublicAccess: false\n    networkAcls: { defaultAction: 'Deny', bypass: 'AzureServices' }\n  }\n}\noutput id string = st.id\noutput name string = st.name",
+    keyVault:"@description('Key Vault')\nparam location string = resourceGroup().location\nparam name string\nparam tenantId string = subscription().tenantId\nparam tags object = {}\nresource kv 'Microsoft.KeyVault/vaults@2023-07-01' = {\n  name: name\n  location: location\n  tags: tags\n  properties: {\n    tenantId: tenantId\n    sku: { family: 'A', name: 'standard' }\n    enableRbacAuthorization: true\n    enableSoftDelete: true\n    softDeleteRetentionInDays: 90\n    enablePurgeProtection: true\n    networkAcls: { defaultAction: 'Deny', bypass: 'AzureServices' }\n  }\n}\noutput id string = kv.id\noutput uri string = kv.properties.vaultUri",
+    vnet:"@description('Virtual Network')\nparam location string = resourceGroup().location\nparam name string\nparam addressPrefix string = '10.0.0.0/16'\nparam subnets array = []\nparam tags object = {}\nresource vnet 'Microsoft.Network/virtualNetworks@2023-06-01' = {\n  name: name\n  location: location\n  tags: tags\n  properties: {\n    addressSpace: { addressPrefixes: [addressPrefix] }\n    subnets: [for s in subnets: { name: s.name, properties: { addressPrefix: s.addressPrefix } }]\n  }\n}\noutput id string = vnet.id",
+    aks:"@description('AKS Cluster')\nparam location string = resourceGroup().location\nparam name string\nparam k8sVersion string = '1.29'\nparam vmSize string = 'Standard_D4s_v5'\nparam logAnalyticsId string\nparam tags object = {}\nresource aks 'Microsoft.ContainerService/managedClusters@2024-01-01' = {\n  name: name\n  location: location\n  tags: tags\n  identity: { type: 'SystemAssigned' }\n  properties: {\n    kubernetesVersion: k8sVersion\n    dnsPrefix: name\n    agentPoolProfiles: [{ name: 'system', count: 3, vmSize: vmSize, osType: 'Linux', mode: 'System', enableAutoScaling: true, minCount: 2, maxCount: 5 }]\n    networkProfile: { networkPlugin: 'azure', networkPolicy: 'calico', loadBalancerSku: 'standard' }\n    addonProfiles: { omsagent: { enabled: true, config: { logAnalyticsWorkspaceResourceID: logAnalyticsId } } }\n    enableRBAC: true\n  }\n}\noutput name string = aks.name"
+  };
+  show('output-bicepmodule','// '+name+'.bicep\n\n'+(T[res]||'// TODO: '+res));
+}
+
+function generateParams(){
+  var fmt=document.getElementById('param-format').value;
+  var env=document.getElementById('param-env').value;
+  var lines=document.getElementById('param-list').value.trim().split('\n').filter(Boolean);
+  var params=lines.map(function(l){var idx=l.indexOf('=');return{k:l.slice(0,idx).trim(),v:l.slice(idx+1).trim()};});
+  if(fmt==='bicepparam'){show('output-bicepparams','// '+env+'.bicepparam\nusing \'./main.bicep\'\n\n'+params.map(function(p){return"param "+p.k+" = '"+p.v+"'";}).join('\n'));}
+  else{var obj={};params.forEach(function(p){obj[p.k]={value:p.v};});show('output-bicepparams','// '+env+'.parameters.json\n'+JSON.stringify({'$schema':'https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#',contentVersion:'1.0.0.0',parameters:obj},null,2));}
+}
+
+function scaffoldTf(){
+  var res=document.getElementById('tf-resource').value;
+  var name=document.getElementById('tf-name').value;
+  var cloud=currentTfCloud;
+  var providers={az:'azurerm',aws:'aws',gcp:'google'};
+  var regions={az:'"uksouth"',aws:'"eu-west-2"',gcp:'"europe-west2"'};
+  var provider=providers[cloud];
+  var extra='';
+  if(res.startsWith('google_storage_bucket')){extra='\n  location = "EU"';}
+  show('output-tfmodule','# modules/'+name+'/main.tf\nterraform {\n  required_providers {\n    '+provider+' = {\n      source  = "hashicorp/'+provider+'"\n      version = "~> 5.0"\n    }\n  }\n}\n\nresource "'+res+'" "this" {\n  name   = var.name\n  '+(cloud==='az'?'location            = var.location\n  resource_group_name = var.resource_group_name':cloud==='aws'?'region = var.region':'project = var.project\n  region  = var.region')+extra+'\n  tags   = var.tags\n}\n\n# modules/'+name+'/variables.tf\nvariable "name"   {}\n'+(cloud==='az'?'variable "location"            { default = '+regions[cloud]+' }\nvariable "resource_group_name" {}':cloud==='aws'?'variable "region"  { default = '+regions[cloud]+' }':'variable "project" {}\nvariable "region"  { default = '+regions[cloud]+' }')+'\nvariable "tags"   { default = {} }\n\n# modules/'+name+'/outputs.tf\noutput "id"   { value = '+res+'.this.id }\noutput "name" { value = '+res+'.this.'+res.startsWith('aws_s3')?'bucket':'name'+' }');
+}
+
+function generateBackend(){
+  var cl=currentBackendCloud;
+  var out='';
+  if(cl==='az'){
+    var st=document.getElementById('tfb-st').value;var con=document.getElementById('tfb-container').value;
+    var rg=document.getElementById('tfb-rg').value;var key=document.getElementById('tfb-key').value;
+    out='# backend.tf - Azure Blob Storage\nterraform {\n  backend "azurerm" {\n    resource_group_name  = "'+rg+'"\n    storage_account_name = "'+st+'"\n    container_name       = "'+con+'"\n    key                  = "'+key+'"\n    use_oidc             = true\n  }\n}\n\n# Provision once:\n# az group create -n '+rg+' -l uksouth\n# az storage account create -n '+st+' -g '+rg+' --sku Standard_ZRS --min-tls-version TLS1_2\n# az storage container create -n '+con+' --account-name '+st;
+  }else if(cl==='aws'){
+    var bk=document.getElementById('tfb-bucket').value;var s3key=document.getElementById('tfb-s3key').value;
+    var region=document.getElementById('tfb-awsregion').value;var dynamo=document.getElementById('tfb-dynamo').value;
+    out='# backend.tf - AWS S3 + DynamoDB\nterraform {\n  backend "s3" {\n    bucket         = "'+bk+'"\n    key            = "'+s3key+'"\n    region         = "'+region+'"\n    encrypt        = true\n    dynamodb_table = "'+dynamo+'"\n  }\n}\n\n# Provision once:\n# aws s3api create-bucket --bucket '+bk+' --region '+region+' --create-bucket-configuration LocationConstraint='+region+'\n# aws s3api put-bucket-versioning --bucket '+bk+' --versioning-configuration Status=Enabled\n# aws s3api put-bucket-encryption --bucket '+bk+' --server-side-encryption-configuration \'{...}\'\n# aws dynamodb create-table --table-name '+dynamo+' --attribute-definitions AttributeName=LockID,AttributeType=S --key-schema AttributeName=LockID,KeyType=HASH --billing-mode PAY_PER_REQUEST';
+  }else{
+    var gbk=document.getElementById('tfb-gcsbucket').value;var gpfx=document.getElementById('tfb-gcsprefix').value;
+    var gproj=document.getElementById('tfb-gcsproj').value;
+    out='# backend.tf - GCP Cloud Storage\nterraform {\n  backend "gcs" {\n    bucket = "'+gbk+'"\n    prefix = "'+gpfx+'"\n  }\n}\n\n# Provision once:\n# gcloud storage buckets create gs://'+gbk+' --project='+gproj+' --location=EUROPE-WEST2\n# gcloud storage buckets update gs://'+gbk+' --versioning\n# gcloud storage buckets update gs://'+gbk+' --uniform-bucket-level-access';
+  }
+  show('output-tfbackend',out);
+}
+
+function generateCicd(){
+  var platform=document.getElementById('cicd-platform').value;
+  var iac=document.getElementById('cicd-iac').value;
+  var env=document.getElementById('cicd-env').value;
+  var auth=document.getElementById('cicd-auth').value;
+  var branch=env==='prod'?'main':env;
+  var out='';
+  if(platform==='gha'){
+    var authSteps={
+      'terraform-az': auth==='oidc'?'      - uses: azure/login@v2\n        with:\n          client-id: ${{ secrets.AZURE_CLIENT_ID }}\n          tenant-id: ${{ secrets.AZURE_TENANT_ID }}\n          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}':'      - uses: azure/login@v2\n        with:\n          creds: ${{ secrets.AZURE_CREDENTIALS }}',
+      'terraform-aws': auth==='oidc'?'      - uses: aws-actions/configure-aws-credentials@v4\n        with:\n          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}\n          aws-region: eu-west-2':'      - uses: aws-actions/configure-aws-credentials@v4\n        with:\n          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}\n          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}\n          aws-region: eu-west-2',
+      'terraform-gcp': auth==='oidc'?'      - uses: google-github-actions/auth@v2\n        with:\n          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}\n          service_account: ${{ secrets.GCP_SA }}':'      - uses: google-github-actions/auth@v2\n        with:\n          credentials_json: ${{ secrets.GCP_CREDENTIALS }}',
+      'bicep': auth==='oidc'?'      - uses: azure/login@v2\n        with:\n          client-id: ${{ secrets.AZURE_CLIENT_ID }}\n          tenant-id: ${{ secrets.AZURE_TENANT_ID }}\n          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}':'      - uses: azure/login@v2\n        with:\n          creds: ${{ secrets.AZURE_CREDENTIALS }}'
+    };
+    var deploySteps={
+      'terraform-az':'      - name: Terraform Init\n        run: terraform init -backend-config="key='+env+'.terraform.tfstate"\n        working-directory: infra/\n      - name: Terraform Plan\n        run: terraform plan -var-file="'+env+'.tfvars" -out=tfplan\n        working-directory: infra/\n      - name: Terraform Apply\n        run: terraform apply tfplan\n        working-directory: infra/',
+      'terraform-aws':'      - name: Terraform Init\n        run: terraform init\n        working-directory: infra/\n      - name: Terraform Plan\n        run: terraform plan -var-file="'+env+'.tfvars" -out=tfplan\n        working-directory: infra/\n      - name: Terraform Apply\n        run: terraform apply tfplan\n        working-directory: infra/',
+      'terraform-gcp':'      - name: Terraform Init\n        run: terraform init\n        working-directory: infra/\n      - name: Terraform Plan\n        run: terraform plan -var-file="'+env+'.tfvars" -out=tfplan\n        working-directory: infra/\n      - name: Terraform Apply\n        run: terraform apply tfplan\n        working-directory: infra/',
+      'bicep':'      - name: Deploy Bicep\n        run: |\n          az deployment sub create \\\n            --location uksouth \\\n            --template-file infra/main.bicep \\\n            --parameters infra/'+env+'.bicepparam'
+    };
+    out='# .github/workflows/deploy-'+env+'.yml\nname: Deploy '+env.charAt(0).toUpperCase()+env.slice(1)+'\n\non:\n  push:\n    branches: ['+branch+']\n  workflow_dispatch:\n\npermissions:\n  id-token: write\n  contents: read\n\njobs:\n  deploy:\n    runs-on: ubuntu-latest\n    environment: '+env+'\n    steps:\n      - uses: actions/checkout@v4\n\n'+(authSteps[iac]||'      # Auth step missing')+'\n\n'+(deploySteps[iac]||'      # Deploy step missing');
+  }else{
+    out='# azure-pipelines-'+env+'.yml\ntrigger:\n  branches:\n    include: ['+branch+']\npool:\n  vmImage: ubuntu-latest\nvariables:\n  - group: '+env+'-secrets\nstages:\n- stage: Deploy\n  jobs:\n  - deployment: Deploy\n    environment: '+env+'\n    strategy:\n      runOnce:\n        deploy:\n          steps:\n          - checkout: self\n          - task: AzureCLI@2\n            inputs:\n              azureSubscription: azure-'+env+'\n              scriptType: bash\n              scriptLocation: inlineScript\n              inlineScript: |\n                '+( iac==='bicep'?'az deployment sub create --location uksouth --template-file infra/main.bicep --parameters infra/'+env+'.bicepparam':'cd infra && terraform init && terraform apply -var-file="'+env+'.tfvars" -auto-approve');
+  }
+  show('output-cicd',out);
+}
+
+/* ====== KUBERNETES ====== */
+function genK8sManifest(){
+  var name=document.getElementById('k8s-name').value;
+  var ns=document.getElementById('k8s-ns').value;
+  var image=document.getElementById('k8s-image').value;
+  var port=document.getElementById('k8s-port').value;
+  var reps=document.getElementById('k8s-replicas').value;
+  var cpuParts=(document.getElementById('k8s-cpu').value||'250m/500m').split('/');
+  var memParts=(document.getElementById('k8s-mem').value||'256Mi/512Mi').split('/');
+  var cReq=cpuParts[0].trim();var cLim=(cpuParts[1]||cpuParts[0]).trim();
+  var mReq=memParts[0].trim();var mLim=(memParts[1]||memParts[0]).trim();
+  show('output-k8smanifest','apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: '+name+'\n  namespace: '+ns+'\n  labels:\n    app: '+name+'\nspec:\n  replicas: '+reps+'\n  selector:\n    matchLabels:\n      app: '+name+'\n  strategy:\n    type: RollingUpdate\n    rollingUpdate:\n      maxSurge: 1\n      maxUnavailable: 0\n  template:\n    metadata:\n      labels:\n        app: '+name+'\n    spec:\n      containers:\n      - name: '+name+'\n        image: '+image+'\n        ports:\n        - containerPort: '+port+'\n        resources:\n          requests:\n            cpu: '+cReq+'\n            memory: '+mReq+'\n          limits:\n            cpu: '+cLim+'\n            memory: '+mLim+'\n        readinessProbe:\n          httpGet: { path: /health, port: '+port+' }\n          initialDelaySeconds: 10\n          periodSeconds: 5\n          failureThreshold: 3\n        livenessProbe:\n          httpGet: { path: /health, port: '+port+' }\n          initialDelaySeconds: 30\n          periodSeconds: 10\n          failureThreshold: 3\n        securityContext:\n          runAsNonRoot: true\n          readOnlyRootFilesystem: true\n          allowPrivilegeEscalation: false\n      securityContext:\n        runAsUser: 1000\n        fsGroup: 2000\n      terminationGracePeriodSeconds: 30');
+}
+
+function adviseAks(){
+  var wl=document.getElementById('aks-wl').value;
+  var pods=parseInt(document.getElementById('aks-pods').value,10);
+  var cpu=parseInt(document.getElementById('aks-cpu').value,10);
+  var mem=parseInt(document.getElementById('aks-mem').value,10);
+  var cl=currentPoolCloud;
+  var tCpu=Math.ceil(pods*cpu/1000*1.3);var tMem=Math.ceil(pods*mem/1024*1.3);
+  var vmMap={
+    az:{web:'Standard_D4s_v5',batch:'Standard_F8s_v2',ml:'Standard_NC4as_T4_v3',infra:'Standard_D4s_v5'},
+    aws:{web:'m6i.xlarge',batch:'c6i.2xlarge',ml:'g4dn.xlarge',infra:'t3.xlarge'},
+    gcp:{web:'n2-standard-4',batch:'c2-standard-8',ml:'n1-standard-4+T4',infra:'e2-standard-4'}
+  };
+  var vmCpu={'Standard_D4s_v5':4,'Standard_F8s_v2':8,'Standard_NC4as_T4_v3':4,'m6i.xlarge':4,'c6i.2xlarge':8,'g4dn.xlarge':4,'t3.xlarge':4,'n2-standard-4':4,'c2-standard-8':8,'n1-standard-4+T4':4,'e2-standard-4':4};
+  var vmRam={'Standard_D4s_v5':16,'Standard_F8s_v2':16,'Standard_NC4as_T4_v3':28,'m6i.xlarge':16,'c6i.2xlarge':16,'g4dn.xlarge':16,'t3.xlarge':16,'n2-standard-4':16,'c2-standard-8':32,'n1-standard-4+T4':15,'e2-standard-4':16};
+  var svc={az:'AKS',aws:'EKS',gcp:'GKE'};
+  var sku=vmMap[cl][wl]||vmMap[cl].web;
+  var minN=Math.max(2,Math.ceil(Math.max(tCpu/(vmCpu[sku]||4),tMem/(vmRam[sku]||16))));
+  var cliCmds={
+    az:'az aks nodepool add \\\n  --cluster-name <cluster> --resource-group <rg> \\\n  --name '+wl+'pool \\\n  --node-vm-size '+sku+' \\\n  --node-count '+minN+' --min-count '+Math.max(2,minN-1)+' --max-count '+Math.ceil(minN*2.5)+' \\\n  --enable-cluster-autoscaler --mode User',
+    aws:'aws eks create-nodegroup \\\n  --cluster-name <cluster> \\\n  --nodegroup-name '+wl+'-pool \\\n  --instance-types '+sku+' \\\n  --scaling-config minSize='+Math.max(2,minN-1)+',maxSize='+Math.ceil(minN*2.5)+',desiredSize='+minN+' \\\n  --node-role arn:aws:iam::ACCOUNT:role/eks-node-role',
+    gcp:'gcloud container node-pools create '+wl+'-pool \\\n  --cluster <cluster> \\\n  --machine-type '+sku.replace('+T4','')+' \\\n  --num-nodes '+minN+' \\\n  --min-nodes '+Math.max(2,minN-1)+' --max-nodes '+Math.ceil(minN*2.5)+' \\\n  --enable-autoscaling \\\n  --zone europe-west2-a'
+  };
+  show('output-akspool','['+svc[cl]+'] Node Pool Recommendation\n'+'-'.repeat(40)+'\nWorkload: '+wl+'  |  '+pods+' pods  |  ~'+cpu+'m CPU  |  ~'+mem+'Mi RAM\n\nRequired (with 30% headroom):\n  Total CPU: '+tCpu+' vCPUs\n  Total RAM: '+tMem+' GiB\n\nRecommended:\n  Instance:  '+sku+'\n  Min Nodes: '+minN+'\n  Max Nodes: '+Math.ceil(minN*2.5)+'\n\n'+cliCmds[cl]);
+}
+
+function scaffoldHelm(){
+  var name=document.getElementById('helm-name').value;
+  var image=document.getElementById('helm-image').value;
+  var svc=document.getElementById('helm-svctype').value;
+  var port=document.getElementById('helm-port').value;
+  show('output-helmscaffold','# Chart.yaml\napiVersion: v2\nname: '+name+'\ndescription: A Helm chart for '+name+'\ntype: application\nversion: 0.1.0\nappVersion: "1.0.0"\n\n# values.yaml\nreplicaCount: 2\nimage:\n  repository: '+image+'\n  pullPolicy: IfNotPresent\n  tag: "latest"\nservice:\n  type: '+svc+'\n  port: '+port+'\nresources:\n  requests:\n    cpu: 250m\n    memory: 256Mi\n  limits:\n    cpu: 500m\n    memory: 512Mi\nautoscaling:\n  enabled: false\n  minReplicas: 2\n  maxReplicas: 10\n\n# templates/deployment.yaml\napiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: {{ include "'+name+'.fullname" . }}\n  labels: {{- include "'+name+'.labels" . | nindent 4 }}\nspec:\n  replicas: {{ .Values.replicaCount }}\n  selector:\n    matchLabels: {{- include "'+name+'.selectorLabels" . | nindent 6 }}\n  template:\n    spec:\n      containers:\n      - name: {{ .Chart.Name }}\n        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"\n        ports:\n        - containerPort: '+port+'\n        resources: {{- toYaml .Values.resources | nindent 12 }}\n\n# templates/service.yaml\napiVersion: v1\nkind: Service\nmetadata:\n  name: {{ include "'+name+'.fullname" . }}\nspec:\n  type: {{ .Values.service.type }}\n  ports:\n  - port: {{ .Values.service.port }}\n    targetPort: '+port+'\n  selector: {{- include "'+name+'.selectorLabels" . | nindent 4 }}\n\n# Install with:\n# helm install '+name+' ./'+name+' -n <namespace> --create-namespace');
+}
+
+function renderKubectl(f){
+  var q=(f||'').toLowerCase();
+  var fil=q?KUBECTL.filter(function(c){return(c.c+c.k+c.d).toLowerCase().indexOf(q)>=0;}):KUBECTL;
+  document.getElementById('output-kubectlref').textContent=fil.map(function(c){return'['+c.c+']  '+c.k+'\n    '+c.d;}).join('\n\n')||'No matches.';
+}
+function filterKubectl(){renderKubectl(document.getElementById('kubectl-search').value);}
+renderKubectl('');
+
+/* ====== SCRIPTING ====== */
+var BASH_SNIPPETS={
+  az:{
+    login:'#!/bin/bash\n# Azure CLI Login\n\n# Interactive login\naz login\n\n# Login with service principal\naz login --service-principal \\\n  --username $AZURE_CLIENT_ID \\\n  --password $AZURE_CLIENT_SECRET \\\n  --tenant $AZURE_TENANT_ID\n\n# Set subscription\naz account set --subscription $SUBSCRIPTION_ID\n\n# Verify\naz account show',
+    'list-resources':'#!/bin/bash\n# List Azure resources\n\n# All VMs in subscription\naz vm list --output table\n\n# Resources in a resource group\naz resource list --resource-group myRG --output table\n\n# Filter by type\naz resource list --resource-type Microsoft.Storage/storageAccounts --output table\n\n# All resources with a specific tag\naz resource list --tag env=prod --output table',
+    'create-rg':'#!/bin/bash\n# Create Azure Resource Group\n\nRG_NAME="rg-myapp-prod-uks-001"\nLOCATION="uksouth"\n\naz group create \\\n  --name $RG_NAME \\\n  --location $LOCATION \\\n  --tags env=prod app=myapp managed-by=terraform\n\necho "Resource group created: $RG_NAME"',
+    'deploy-vm':'#!/bin/bash\n# Deploy Azure VM\n\naz vm create \\\n  --resource-group myRG \\\n  --name vm-myapp-prod-uks-001 \\\n  --image Ubuntu2204 \\\n  --size Standard_D4s_v5 \\\n  --admin-username azureadmin \\\n  --ssh-key-values ~/.ssh/id_rsa.pub \\\n  --vnet-name vnet-hub-prod-uks-001 \\\n  --subnet snet-management \\\n  --public-ip-address "" \\\n  --no-wait\n\necho "VM deployment started."',
+    'storage-ops':'#!/bin/bash\n# Azure Blob Storage operations\n\n# Upload file\naz storage blob upload \\\n  --account-name mystorageaccount \\\n  --container-name mycontainer \\\n  --name myfile.txt \\\n  --file ./myfile.txt \\\n  --auth-mode login\n\n# List blobs\naz storage blob list \\\n  --account-name mystorageaccount \\\n  --container-name mycontainer \\\n  --auth-mode login --output table\n\n# Download file\naz storage blob download \\\n  --account-name mystorageaccount \\\n  --container-name mycontainer \\\n  --name myfile.txt \\\n  --file ./downloaded.txt \\\n  --auth-mode login',
+    'k8s-creds':'#!/bin/bash\n# Get AKS credentials\n\naz aks get-credentials \\\n  --resource-group rg-myapp-prod-uks-001 \\\n  --name aks-myapp-prod-uks-001 \\\n  --overwrite-existing\n\n# Verify\nkubectl get nodes\nkubectl get pods -A',
+    'cost-check':'#!/bin/bash\n# Check Azure costs\n\n# Current month spend by resource group\naz consumption usage list \\\n  --start-date $(date -d "$(date +%Y-%m-01)" +%Y-%m-%d) \\\n  --end-date $(date +%Y-%m-%d) \\\n  --output table\n\n# Budget status\naz consumption budget list --output table',
+    cleanup:'#!/bin/bash\n# Delete Azure resource group and all resources\n\nRG="rg-myapp-dev-uks-001"\n\n# Preview what will be deleted\naz resource list --resource-group $RG --output table\n\n# Delete (--no-wait for async)\naz group delete --name $RG --yes --no-wait\necho "Deletion initiated for: $RG"'
+  },
+  aws:{
+    login:'#!/bin/bash\n# AWS CLI Auth setup\n\n# Configure with access keys (dev only)\naws configure\n\n# Or set env vars (CI/CD)\nexport AWS_ACCESS_KEY_ID="your-key"\nexport AWS_SECRET_ACCESS_KEY="your-secret"\nexport AWS_DEFAULT_REGION="eu-west-2"\n\n# Assume an IAM role\nCREDS=$(aws sts assume-role \\\n  --role-arn arn:aws:iam::ACCOUNT:role/MyRole \\\n  --role-session-name mySession \\\n  --query Credentials \\\n  --output json)\n\nexport AWS_ACCESS_KEY_ID=$(echo $CREDS | jq -r .AccessKeyId)\nexport AWS_SECRET_ACCESS_KEY=$(echo $CREDS | jq -r .SecretAccessKey)\nexport AWS_SESSION_TOKEN=$(echo $CREDS | jq -r .SessionToken)\n\n# Verify\naws sts get-caller-identity',
+    'list-resources':'#!/bin/bash\n# List AWS resources\n\n# EC2 instances\naws ec2 describe-instances \\\n  --query "Reservations[*].Instances[*].{ID:InstanceId,State:State.Name,Type:InstanceType,IP:PrivateIpAddress}" \\\n  --output table\n\n# S3 buckets\naws s3 ls\n\n# EKS clusters\naws eks list-clusters --output table\n\n# Resources by tag\naws resourcegroupstaggingapi get-resources \\\n  --tag-filters Key=env,Values=prod \\\n  --output table',
+    'create-rg':'#!/bin/bash\n# Create AWS VPC\n\nVPC_ID=$(aws ec2 create-vpc \\\n  --cidr-block 10.0.0.0/16 \\\n  --tag-specifications "ResourceType=vpc,Tags=[{Key=Name,Value=vpc-myapp-prod},{Key=env,Value=prod}]" \\\n  --query Vpc.VpcId \\\n  --output text)\n\necho "VPC created: $VPC_ID"\n\n# Enable DNS hostnames\naws ec2 modify-vpc-attribute --vpc-id $VPC_ID --enable-dns-hostnames',
+    'deploy-vm':'#!/bin/bash\n# Launch AWS EC2 instance\n\naws ec2 run-instances \\\n  --image-id ami-0694d931cee176e7d \\\n  --instance-type m6i.xlarge \\\n  --key-name my-key-pair \\\n  --subnet-id subnet-xxxxxxxxxxxxxxxxx \\\n  --security-group-ids sg-xxxxxxxxxxxxxxxxx \\\n  --iam-instance-profile Name=my-instance-profile \\\n  --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=ec2-myapp-prod-use1}]" \\\n  --no-associate-public-ip-address\n\necho "Instance launch initiated."',
+    'storage-ops':'#!/bin/bash\n# AWS S3 operations\n\n# Upload file\naws s3 cp ./myfile.txt s3://my-bucket/myfile.txt\n\n# Sync directory\naws s3 sync ./local-dir/ s3://my-bucket/prefix/ --exclude "*.tmp"\n\n# List objects\naws s3 ls s3://my-bucket/ --recursive --human-readable\n\n# Download\naws s3 cp s3://my-bucket/myfile.txt ./downloaded.txt\n\n# Set lifecycle rule\naws s3api put-bucket-lifecycle-configuration \\\n  --bucket my-bucket \\\n  --lifecycle-configuration file://lifecycle.json',
+    'k8s-creds':'#!/bin/bash\n# Get EKS credentials\n\naws eks update-kubeconfig \\\n  --name my-eks-cluster \\\n  --region eu-west-2 \\\n  --alias my-cluster\n\n# Verify\nkubectl get nodes\nkubectl get pods -A\n\n# If using IAM roles for service accounts\naws eks describe-cluster --name my-eks-cluster --query cluster.identity',
+    'cost-check':'#!/bin/bash\n# AWS cost check\n\nSTART=$(date -d "$(date +%Y-%m-01)" +%Y-%m-%d)\nEND=$(date +%Y-%m-%d)\n\naws ce get-cost-and-usage \\\n  --time-period Start=$START,End=$END \\\n  --granularity MONTHLY \\\n  --metrics BlendedCost \\\n  --group-by Type=DIMENSION,Key=SERVICE \\\n  --output table',
+    cleanup:'#!/bin/bash\n# AWS cleanup - terminate EC2 and delete S3\n\n# Terminate EC2 instance\naws ec2 terminate-instances --instance-ids i-xxxxxxxxxxxxxxxxx\n\n# Empty and delete S3 bucket\naws s3 rm s3://my-bucket/ --recursive\naws s3api delete-bucket --bucket my-bucket --region eu-west-2\n\necho "Cleanup complete."'
+  },
+  gcp:{
+    login:'#!/bin/bash\n# GCP gcloud Auth\n\n# Interactive login\ngcloud auth login\n\n# Application default credentials (for SDKs)\ngcloud auth application-default login\n\n# Service account auth\ngcloud auth activate-service-account \\\n  --key-file=/path/to/key.json\n\n# Set project\ngcloud config set project my-project-id\n\n# Verify\ngcloud auth list\ngcloud config list',
+    'list-resources':'#!/bin/bash\n# List GCP resources\n\n# Compute instances\ngcloud compute instances list\n\n# Cloud Storage buckets\ngcloud storage buckets list\n\n# GKE clusters\ngcloud container clusters list\n\n# Resources by label\ngcloud compute instances list \\\n  --filter="labels.env=prod"',
+    'create-rg':'#!/bin/bash\n# Create GCP VPC\n\ngcloud compute networks create vpc-myapp-prod \\\n  --subnet-mode custom \\\n  --bgp-routing-mode regional\n\n# Create subnet\ngcloud compute networks subnets create sn-app-euw2 \\\n  --network vpc-myapp-prod \\\n  --region europe-west2 \\\n  --range 10.0.1.0/24\n\necho "VPC and subnet created."',
+    'deploy-vm':'#!/bin/bash\n# Create GCP Compute Engine instance\n\ngcloud compute instances create vm-myapp-prod-euw2 \\\n  --machine-type n2-standard-4 \\\n  --image-family debian-12 \\\n  --image-project debian-cloud \\\n  --zone europe-west2-a \\\n  --subnet sn-app-euw2 \\\n  --no-address \\\n  --service-account sa-myapp-prod@my-project.iam.gserviceaccount.com \\\n  --scopes cloud-platform \\\n  --labels env=prod,app=myapp\n\necho "VM created."',
+    'storage-ops':'#!/bin/bash\n# GCS operations\n\n# Upload file\ngcloud storage cp ./myfile.txt gs://my-bucket/myfile.txt\n\n# Sync directory\ngcloud storage rsync ./local-dir/ gs://my-bucket/prefix/ --recursive\n\n# List objects\ngcloud storage ls gs://my-bucket/ --long\n\n# Download\ngcloud storage cp gs://my-bucket/myfile.txt ./downloaded.txt\n\n# Set lifecycle\ngcloud storage buckets update gs://my-bucket \\\n  --lifecycle-file lifecycle.json',
+    'k8s-creds':'#!/bin/bash\n# Get GKE credentials\n\ngcloud container clusters get-credentials my-gke-cluster \\\n  --zone europe-west2-a \\\n  --project my-project-id\n\n# For regional cluster\ngcloud container clusters get-credentials my-gke-cluster \\\n  --region europe-west2 \\\n  --project my-project-id\n\n# Verify\nkubectl get nodes\nkubectl get pods -A',
+    'cost-check':'#!/bin/bash\n# GCP billing check\n\n# List billing accounts\ngcloud billing accounts list\n\n# Link project to billing\ngcloud billing projects link my-project \\\n  --billing-account 0X0X0X-0X0X0X-0X0X0X\n\n# For detailed cost data, use BigQuery export:\n# bq query "SELECT service.description, SUM(cost) as total\n# FROM billing_dataset.gcp_billing_export_*\n# WHERE DATE(_PARTITIONTIME) >= \'2024-01-01\'\n# GROUP BY 1 ORDER BY 2 DESC"',
+    cleanup:'#!/bin/bash\n# GCP cleanup\n\n# Delete Compute instance\ngcloud compute instances delete vm-myapp-prod-euw2 \\\n  --zone europe-west2-a --quiet\n\n# Empty and delete GCS bucket\ngcloud storage rm gs://my-bucket/** --recursive\ngcloud storage buckets delete gs://my-bucket\n\necho "GCP resources deleted."'
+  }
+};
+
+function getBashSnippet(){
+  var cloud=document.getElementById('bash-cloud').value;
+  var task=document.getElementById('bash-task').value;
+  var snippet=(BASH_SNIPPETS[cloud]||{})[task]||'# Snippet not available for this combination.';
+  show('output-bashsnippets',snippet);
+}
+
+var PS_SNIPPETS={
+  az:{
+    connect:'# Azure PowerShell - Connect\nInstall-Module -Name Az -Scope CurrentUser -Force\n\n# Interactive login\nConnect-AzAccount\n\n# Login with service principal\n$credential = New-Object PSCredential($env:AZURE_CLIENT_ID, (ConvertTo-SecureString $env:AZURE_CLIENT_SECRET -AsPlainText -Force))\nConnect-AzAccount -ServicePrincipal -TenantId $env:AZURE_TENANT_ID -Credential $credential\n\n# Set subscription\nSet-AzContext -SubscriptionId $env:SUBSCRIPTION_ID',
+    'list-vms':'# List Azure VMs\nGet-AzVM | Select-Object Name, ResourceGroupName, Location, @{N="Size";E={$_.HardwareProfile.VmSize}} | Format-Table -AutoSize\n\n# Get VM status\nGet-AzVM -Status | Select-Object Name, PowerState | Format-Table',
+    'start-stop':'# Start / Stop Azure VMs\n\n# Stop (deallocate) VM\nStop-AzVM -ResourceGroupName "myRG" -Name "myVM" -Force\n\n# Start VM\nStart-AzVM -ResourceGroupName "myRG" -Name "myVM"\n\n# Stop ALL VMs in a resource group\nGet-AzVM -ResourceGroupName "myRG" | Stop-AzVM -Force',
+    storage:'# Azure Storage operations\n$ctx = New-AzStorageContext -StorageAccountName "mystorageaccount" -UseConnectedAccount\n\n# Upload blob\nSet-AzStorageBlobContent -File "./myfile.txt" -Container "mycontainer" -Blob "myfile.txt" -Context $ctx\n\n# List blobs\nGet-AzStorageBlob -Container "mycontainer" -Context $ctx | Format-Table Name, Length',
+    tags:'# Tag Azure resources in bulk\n$resources = Get-AzResource -ResourceGroupName "myRG"\nforeach ($r in $resources) {\n  $tags = $r.Tags\n  $tags["env"] = "prod"\n  $tags["managed-by"] = "powershell"\n  Set-AzResource -ResourceId $r.ResourceId -Tag $tags -Force\n}\nWrite-Host "Tags applied to $($resources.Count) resources."',
+    report:'# Export Azure resource inventory to CSV\n$resources = Get-AzResource | Select-Object Name, ResourceType, ResourceGroupName, Location, @{N="Tags";E={$_.Tags | ConvertTo-Json -Compress}}\n$resources | Export-Csv -Path "./azure-inventory.csv" -NoTypeInformation\nWrite-Host "Exported $($resources.Count) resources to azure-inventory.csv"'
+  },
+  aws:{
+    connect:'# AWS Tools for PowerShell - Setup\nInstall-Module -Name AWS.Tools.Installer -Force\nInstall-AWSToolsModule AWS.Tools.EC2, AWS.Tools.S3 -Force\n\n# Configure credentials\nSet-AWSCredential -AccessKey $env:AWS_ACCESS_KEY_ID -SecretKey $env:AWS_SECRET_ACCESS_KEY -StoreAs default\n\n# Set default region\nSet-DefaultAWSRegion -Region "eu-west-2"\n\n# Verify\nGet-STSCallerIdentity',
+    'list-vms':'# List EC2 instances\nGet-EC2Instance | Select-Object -ExpandProperty Instances | Select-Object InstanceId, InstanceType, State, PrivateIpAddress, @{N="Name";E={($_.Tags | Where-Object {$_.Key -eq "Name"}).Value}} | Format-Table -AutoSize',
+    'start-stop':'# Start / Stop EC2 instances\n\n# Stop instance\nStop-EC2Instance -InstanceId "i-xxxxxxxxxxxxxxxxx"\n\n# Start instance\nStart-EC2Instance -InstanceId "i-xxxxxxxxxxxxxxxxx"\n\n# Stop all instances with tag env=dev\n$instances = (Get-EC2Instance -Filter @{Name="tag:env";Values="dev"}).Instances\n$instances | ForEach-Object { Stop-EC2Instance -InstanceId $_.InstanceId }',
+    storage:'# AWS S3 operations\n\n# Upload file\nWrite-S3Object -BucketName "my-bucket" -File "./myfile.txt" -Key "myfile.txt"\n\n# List objects\nGet-S3Object -BucketName "my-bucket" | Format-Table Key, Size, LastModified\n\n# Download\nRead-S3Object -BucketName "my-bucket" -Key "myfile.txt" -File "./downloaded.txt"',
+    tags:'# Tag EC2 instances in bulk\n$instances = (Get-EC2Instance).Instances\nforeach ($i in $instances) {\n  New-EC2Tag -Resource $i.InstanceId -Tag @(@{Key="managed-by";Value="powershell"},@{Key="reviewed";Value=(Get-Date -Format "yyyy-MM-dd")})\n}\nWrite-Host "Tagged $($instances.Count) instances."',
+    report:'# Export AWS EC2 inventory to CSV\n$instances = (Get-EC2Instance).Instances | Select-Object InstanceId, InstanceType, @{N="State";E={$_.State.Name}}, PrivateIpAddress, @{N="Name";E={($_.Tags|Where-Object{$_.Key -eq "Name"}).Value}}\n$instances | Export-Csv -Path "./ec2-inventory.csv" -NoTypeInformation\nWrite-Host "Exported $($instances.Count) instances."'
+  }
+};
+
+function getPsSnippet(){
+  var cloud=document.getElementById('ps-cloud').value;
+  var task=document.getElementById('ps-task').value;
+  var snippet=(PS_SNIPPETS[cloud]||{})[task]||'# Snippet not available for this combination.';
+  show('output-pssnippets',snippet);
+}
+
+var PY_SNIPPETS={
+  az:{
+    auth:'# Azure SDK - Authentication\n# pip install azure-identity azure-mgmt-resource\n\nfrom azure.identity import DefaultAzureCredential, ClientSecretCredential\nfrom azure.mgmt.resource import ResourceManagementClient\nimport os\n\n# DefaultAzureCredential (tries env vars, managed identity, etc.)\ncredential = DefaultAzureCredential()\n\n# Or explicit service principal\ncredential = ClientSecretCredential(\n    tenant_id=os.environ["AZURE_TENANT_ID"],\n    client_id=os.environ["AZURE_CLIENT_ID"],\n    client_secret=os.environ["AZURE_CLIENT_SECRET"]\n)\n\nclient = ResourceManagementClient(credential, os.environ["AZURE_SUBSCRIPTION_ID"])\nprint("Connected to Azure subscription.")',
+    'list-vms':'# List Azure VMs\n# pip install azure-mgmt-compute\n\nfrom azure.identity import DefaultAzureCredential\nfrom azure.mgmt.compute import ComputeManagementClient\nimport os\n\ncredential = DefaultAzureCredential()\nsubscription_id = os.environ["AZURE_SUBSCRIPTION_ID"]\nclient = ComputeManagementClient(credential, subscription_id)\n\nvms = client.virtual_machines.list_all()\nfor vm in vms:\n    print(f"{vm.name:<30} {vm.location:<15} {vm.hardware_profile.vm_size}")',
+    'storage-upload':'# Upload to Azure Blob Storage\n# pip install azure-storage-blob\n\nfrom azure.storage.blob import BlobServiceClient\nfrom azure.identity import DefaultAzureCredential\n\naccount_url = "https://mystorageaccount.blob.core.windows.net"\ncredential = DefaultAzureCredential()\nclient = BlobServiceClient(account_url, credential=credential)\n\ncontainer = client.get_container_client("mycontainer")\n\n# Upload file\nwith open("./myfile.txt", "rb") as data:\n    container.upload_blob("myfile.txt", data, overwrite=True)\n\nprint("Upload complete.")',
+    'storage-list':'# List blobs in Azure container\nfrom azure.storage.blob import BlobServiceClient\nfrom azure.identity import DefaultAzureCredential\n\nclient = BlobServiceClient("https://mystorageaccount.blob.core.windows.net", DefaultAzureCredential())\ncontainer = client.get_container_client("mycontainer")\n\nfor blob in container.list_blobs():\n    print(f"{blob.name:<50} {blob.size:>12,} bytes")',
+    cost:'# Azure Cost Query\n# pip install azure-mgmt-costmanagement\n\nfrom azure.identity import DefaultAzureCredential\nfrom azure.mgmt.costmanagement import CostManagementClient\nfrom datetime import datetime, timedelta\n\ncredential = DefaultAzureCredential()\nclient = CostManagementClient(credential)\n\nscope = f"/subscriptions/{os.environ[\'AZURE_SUBSCRIPTION_ID\']}"\nresult = client.query.usage(scope, {\n    "type": "ActualCost",\n    "timeframe": "MonthToDate",\n    "dataset": {\n        "granularity": "Daily",\n        "aggregation": {"totalCost": {"name": "Cost", "function": "Sum"}}\n    }\n})\nfor row in result.rows:\n    print(row)',
+    tags:'# List Azure resources by tag\nfrom azure.identity import DefaultAzureCredential\nfrom azure.mgmt.resource import ResourceManagementClient\nimport os\n\ncredential = DefaultAzureCredential()\nclient = ResourceManagementClient(credential, os.environ["AZURE_SUBSCRIPTION_ID"])\n\nresources = client.resources.list(filter="tagName eq \'env\' and tagValue eq \'prod\'")\nfor r in resources:\n    print(f"{r.name:<40} {r.type}")'
+  },
+  aws:{
+    auth:'# AWS boto3 - Authentication\n# pip install boto3\n\nimport boto3\nimport os\n\n# Default credential chain (env vars, ~/.aws/credentials, instance profile)\nclient = boto3.client("sts", region_name="eu-west-2")\nprint(client.get_caller_identity())\n\n# Explicit credentials (avoid in prod - use IAM roles)\nclient = boto3.client(\n    "s3",\n    aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],\n    aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"],\n    region_name="eu-west-2"\n)\n\n# Assume role\nsts = boto3.client("sts")\ncreds = sts.assume_role(\n    RoleArn="arn:aws:iam::ACCOUNT:role/MyRole",\n    RoleSessionName="mySession"\n)["Credentials"]\n\nboto3.setup_default_session(\n    aws_access_key_id=creds["AccessKeyId"],\n    aws_secret_access_key=creds["SecretAccessKey"],\n    aws_session_token=creds["SessionToken"]\n)',
+    'list-vms':'# List EC2 instances with boto3\nimport boto3\n\nec2 = boto3.client("ec2", region_name="eu-west-2")\nresponse = ec2.describe_instances()\n\nfor reservation in response["Reservations"]:\n    for instance in reservation["Instances"]:\n        name = next((t["Value"] for t in instance.get("Tags",[]) if t["Key"]=="Name"), "N/A")\n        print(f"{instance[\'InstanceId\']:<25} {instance[\'InstanceType\']:<15} {instance[\'State\'][\'Name\']:<12} {name}")',
+    'storage-upload':'# Upload to AWS S3 with boto3\nimport boto3\n\ns3 = boto3.client("s3", region_name="eu-west-2")\n\n# Upload file\ns3.upload_file(\n    "./myfile.txt",\n    "my-bucket",\n    "myfile.txt",\n    ExtraArgs={"ServerSideEncryption": "AES256"}\n)\nprint("Upload complete.")\n\n# Upload with progress\nimport os\nfile_size = os.path.getsize("./largefile.bin")\nwith open("./largefile.bin", "rb") as f:\n    s3.upload_fileobj(f, "my-bucket", "largefile.bin")',
+    'storage-list':'# List S3 objects\nimport boto3\n\ns3 = boto3.client("s3", region_name="eu-west-2")\npaginator = s3.get_paginator("list_objects_v2")\n\nfor page in paginator.paginate(Bucket="my-bucket", Prefix="my-prefix/"):\n    for obj in page.get("Contents", []):\n        print(f"{obj[\'Key\']:<60} {obj[\'Size\']:>12,} bytes")',
+    cost:'# AWS Cost Explorer\nimport boto3\nfrom datetime import datetime, timedelta\n\nce = boto3.client("ce", region_name="us-east-1")  # Cost Explorer is global\nend = datetime.today().strftime("%Y-%m-%d")\nstart = datetime.today().replace(day=1).strftime("%Y-%m-%d")\n\nresult = ce.get_cost_and_usage(\n    TimePeriod={"Start": start, "End": end},\n    Granularity="MONTHLY",\n    Metrics=["BlendedCost"],\n    GroupBy=[{"Type": "DIMENSION", "Key": "SERVICE"}]\n)\nfor group in result["ResultsByTime"][0]["Groups"]:\n    print(f"{group[\'Keys\'][0]:<50} ${float(group[\'Metrics\'][\'BlendedCost\'][\'Amount\']):>10.2f}")',
+    tags:'# List AWS resources by tag\nimport boto3\n\nclient = boto3.client("resourcegroupstaggingapi", region_name="eu-west-2")\npaginator = client.get_paginator("get_resources")\n\nfor page in paginator.paginate(TagFilters=[{"Key": "env", "Values": ["prod"]}]):\n    for r in page["ResourceTagMappingList"]:\n        print(r["ResourceARN"])'
+  },
+  gcp:{
+    auth:'# GCP - Authentication\n# pip install google-cloud-resource-manager google-auth\n\nfrom google.oauth2 import service_account\nfrom google.auth import default\nimport google.auth\n\n# Application Default Credentials (recommended)\ncredentials, project = google.auth.default()\nprint(f"Authenticated to project: {project}")\n\n# Service account key file (avoid - use ADC or Workload Identity)\ncredentials = service_account.Credentials.from_service_account_file(\n    "service-account-key.json",\n    scopes=["https://www.googleapis.com/auth/cloud-platform"]\n)',
+    'list-vms':'# List GCP Compute instances\n# pip install google-cloud-compute\n\nfrom google.cloud import compute_v1\n\nclient = compute_v1.InstancesClient()\nproject = "my-project-id"\n\nfor zone_instances in client.aggregated_list(project=project):\n    zone, instances = zone_instances\n    if instances.instances:\n        for vm in instances.instances:\n            print(f"{vm.name:<30} {zone.split(\'/\')[-1]:<25} {vm.status}")',
+    'storage-upload':'# Upload to GCS\n# pip install google-cloud-storage\n\nfrom google.cloud import storage\n\nclient = storage.Client()\nbucket = client.bucket("my-bucket")\n\n# Upload file\nblob = bucket.blob("myfile.txt")\nblob.upload_from_filename("./myfile.txt")\nprint(f"Uploaded to gs://my-bucket/myfile.txt")',
+    'storage-list':'# List GCS objects\nfrom google.cloud import storage\n\nclient = storage.Client()\nbucket = client.bucket("my-bucket")\n\nfor blob in bucket.list_blobs(prefix="my-prefix/"):\n    print(f"{blob.name:<60} {blob.size:>12,} bytes")',
+    cost:'# GCP Billing (requires BigQuery export)\n# pip install google-cloud-bigquery\n\nfrom google.cloud import bigquery\n\nclient = bigquery.Client(project="my-project-id")\n\nquery = """\nSELECT\n  service.description as service,\n  ROUND(SUM(cost), 2) as total_cost\nFROM `my-project.billing_dataset.gcp_billing_export_v1_*`\nWHERE DATE(_PARTITIONTIME) >= DATE_TRUNC(CURRENT_DATE(), MONTH)\nGROUP BY 1\nORDER BY 2 DESC\nLIMIT 20\n"""\nfor row in client.query(query): print(f"{row.service:<50} GBP {row.total_cost:>10.2f}")',
+    tags:'# List GCP resources by label\nfrom google.cloud import compute_v1\n\nclient = compute_v1.InstancesClient()\nfor zone_instances in client.aggregated_list(project="my-project-id",\n    filter=\'labels.env=prod\'):\n    _, instances = zone_instances\n    if instances.instances:\n        for vm in instances.instances:\n            print(vm.name, vm.labels)'
+  }
+};
+
+function getPySnippet(){
+  var cloud=document.getElementById('py-cloud').value;
+  var task=document.getElementById('py-task').value;
+  var snippet=(PY_SNIPPETS[cloud]||{})[task]||'# Snippet not available for this combination.';
+  show('output-pysnippets',snippet);
+}
+
+var CLI_SETUP={
+  az:'# Azure CLI - Setup and Auth\n\n# Install (Linux/macOS)\ncurl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash\n\n# Install (macOS with Homebrew)\nbrew install azure-cli\n\n# Install (Windows)\nwinget install -e --id Microsoft.AzureCLI\n\n# Verify\naz version\n\n# --- Interactive Login ---\naz login\n\n# --- Service Principal Login (CI/CD) ---\naz login \\\n  --service-principal \\\n  --username $AZURE_CLIENT_ID \\\n  --password $AZURE_CLIENT_SECRET \\\n  --tenant $AZURE_TENANT_ID\n\n# --- OIDC / Workload Identity (GitHub Actions) ---\n# In workflow:\n# - uses: azure/login@v2\n#   with:\n#     client-id: ${{ secrets.AZURE_CLIENT_ID }}\n#     tenant-id: ${{ secrets.AZURE_TENANT_ID }}\n#     subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}\n\n# --- Set subscription ---\naz account set --subscription $SUBSCRIPTION_ID\naz account show\n\n# --- Common config ---\naz config set core.output=table\naz config set extension.use_dynamic_install=yes_without_prompt',
+  aws:'# AWS CLI - Setup and Auth\n\n# Install (Linux)\ncurl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"\nunzip awscliv2.zip && sudo ./aws/install\n\n# Install (macOS)\nbrew install awscli\n\n# Install (Windows)\nmsiexec.exe /i https://awscli.amazonaws.com/AWSCLIV2.msi\n\n# Verify\naws --version\n\n# --- Configure (interactive) ---\naws configure\n# Prompts for: Access Key ID, Secret Access Key, Region, Output format\n\n# --- Environment variables (CI/CD) ---\nexport AWS_ACCESS_KEY_ID="AKIA..."\nexport AWS_SECRET_ACCESS_KEY="..."\nexport AWS_DEFAULT_REGION="eu-west-2"\n\n# --- IAM Role / STS AssumeRole ---\nCREDS=$(aws sts assume-role \\\n  --role-arn arn:aws:iam::ACCOUNT:role/MyRole \\\n  --role-session-name session1 \\\n  --query Credentials --output json)\nexport AWS_ACCESS_KEY_ID=$(echo $CREDS|jq -r .AccessKeyId)\nexport AWS_SECRET_ACCESS_KEY=$(echo $CREDS|jq -r .SecretAccessKey)\nexport AWS_SESSION_TOKEN=$(echo $CREDS|jq -r .SessionToken)\n\n# --- OIDC / GitHub Actions ---\n# - uses: aws-actions/configure-aws-credentials@v4\n#   with:\n#     role-to-assume: arn:aws:iam::ACCOUNT:role/GitHubActionsRole\n#     aws-region: eu-west-2\n\n# --- Named profiles ---\naws configure --profile prod\nexport AWS_PROFILE=prod',
+  gcp:'# gcloud CLI - Setup and Auth\n\n# Install (Linux/macOS)\ncurl https://sdk.cloud.google.com | bash\nexec -l $SHELL\ngcloud init\n\n# Install (macOS with Homebrew)\nbrew install --cask google-cloud-sdk\n\n# Install (Windows)\n# Download installer from: cloud.google.com/sdk/docs/install\n\n# Verify\ngcloud version\n\n# --- Interactive Login ---\ngcloud auth login\n\n# --- Application Default Credentials (for SDKs) ---\ngcloud auth application-default login\n\n# --- Service Account Key (avoid - use Workload Identity) ---\ngcloud auth activate-service-account \\\n  --key-file=/path/to/sa-key.json\n\n# --- Workload Identity Federation (GitHub Actions) ---\n# - uses: google-github-actions/auth@v2\n#   with:\n#     workload_identity_provider: projects/123/locations/global/workloadIdentityPools/pool/providers/github\n#     service_account: my-sa@project.iam.gserviceaccount.com\n\n# --- Set project ---\ngcloud config set project my-project-id\ngcloud config set compute/region europe-west2\ngcloud config set compute/zone europe-west2-a\n\n# --- Config profiles ---\ngcloud config configurations create prod\ngcloud config set project prod-project-id'
+};
+
+function renderCliSetup(c){show('output-clisetup',CLI_SETUP[c]||'# Select a cloud above.');}
+renderCliSetup('az');
+
+/* ====== COST TOOLS ====== */
+function calcSavings(){
+  var cloud=document.getElementById('ri-cloud').value;
+  var payg=parseFloat(document.getElementById('ri-payg').value);
+  var d1=parseFloat(document.getElementById('ri-1yr').value)/100;
+  var d3=parseFloat(document.getElementById('ri-3yr').value)/100;
+  var m1=payg*(1-d1);var m3=payg*(1-d3);
+  var labels={az:'Azure Reserved Instances',aws:'AWS Reserved Instances',gcp:'GCP Committed Use Discounts'};
+  show('output-savingsplan','['+labels[cloud]+']\n'+'-'.repeat(40)+'\nOn-Demand:  GBP '+payg.toFixed(2)+'/mo   GBP '+(payg*12).toFixed(2)+'/yr\n\n1yr Commit: GBP '+m1.toFixed(2)+'/mo   GBP '+(m1*12).toFixed(2)+'/yr\n  Saving:   GBP '+((payg-m1)*12).toFixed(2)+'/yr  ('+Math.round(d1*100)+'% discount)\n\n3yr Commit: GBP '+m3.toFixed(2)+'/mo   GBP '+(m3*36).toFixed(2)+'/3yr\n  Saving:   GBP '+((payg-m3)*36).toFixed(2)+'/3yr  ('+Math.round(d3*100)+'% discount)\n\nTypical discounts by cloud:\n  Azure RI:  1yr ~30-40%, 3yr ~55-65%\n  AWS RI:    1yr ~35-45%, 3yr ~55-65% (Convertible)\n  GCP CUD:   1yr ~20-30%, 3yr ~37-57%');
+}
+
+function calcAlerts(){
+  var budget=parseFloat(document.getElementById('aa-budget').value);
+  var risk=document.getElementById('aa-risk').value;
+  var cloud=document.getElementById('aa-cloud').value;
+  var mults=risk==='low'?[0.5,0.7,0.85,1.0,1.1]:risk==='medium'?[0.5,0.8,1.0,1.1,1.25]:[0.6,0.9,1.0,1.2,1.5];
+  var labels=['Warning (early)','Warning','Alert','Critical','Overspend'];
+  var lines=mults.map(function(m,i){return'  '+(labels[i]+'              ').slice(0,16)+' '+Math.round(m*100)+'%   GBP '+(budget*m).toFixed(2);});
+  var snippet='';
+  if(cloud==='az'){snippet='\nBicep snippet:\nresource budget \'Microsoft.Consumption/budgets@2023-05-01\' = {\n  name: \'budget-monthly\'\n  properties: {\n    amount: '+budget+'\n    timeGrain: \'Monthly\'\n    notifications: {\n      warn: { threshold: '+Math.round(mults[1]*100)+', contactEmails: [\'cloud@example.com\'] }\n      crit: { threshold: '+Math.round(mults[3]*100)+', contactEmails: [\'lead@example.com\'] }\n    }\n  }\n}';}
+  else if(cloud==='aws'){snippet='\nAWS CLI:\naws budgets create-budget --account-id ACCOUNT_ID --budget \'{"BudgetName":"MonthlyBudget","BudgetLimit":{"Amount":"'+budget+'","Unit":"USD"},"TimeUnit":"MONTHLY","BudgetType":"COST"}\' --notifications-with-subscribers \'[{"Notification":{"NotificationType":"ACTUAL","ComparisonOperator":"GREATER_THAN","Threshold":'+Math.round(mults[2]*100)+'},"Subscribers":[{"SubscriptionType":"EMAIL","Address":"cloud@example.com"}]}]\'';}
+  else{snippet='\ngcloud (Billing Budget):\ngcloud billing budgets create \\\n  --billing-account=BILLING_ACCOUNT_ID \\\n  --display-name="Monthly Budget" \\\n  --budget-amount='+budget+'GBP \\\n  --threshold-rule=percent='+Math.round(mults[1]*100)+' \\\n  --threshold-rule=percent='+Math.round(mults[3]*100);}
+  show('output-budgetalert','Budget: GBP '+budget.toFixed(2)+'/month  |  Risk: '+risk+'\n'+'-'.repeat(40)+'\n\n'+lines.join('\n')+'\n'+snippet);
+}
+
+function buildChargeback(){
+  var rows=document.getElementById('cb-teams').value.trim().split('\n').filter(Boolean);
+  var entries=rows.map(function(r){var p=r.split(':');return{team:(p[0]||'').trim(),amount:parseFloat(p[1])||0};});
+  var total=entries.reduce(function(s,e){return s+e.amount;},0);
+  var csv=['Team,Monthly (GBP),Annual (GBP),% of Total'];
+  entries.forEach(function(e){var pct=total?((e.amount/total)*100).toFixed(1):'0.0';csv.push(e.team+','+e.amount.toFixed(2)+','+(e.amount*12).toFixed(2)+','+pct+'%');});
+  csv.push('TOTAL,'+total.toFixed(2)+','+(total*12).toFixed(2)+',100%');
+  show('output-chargeback',csv.join('\n'));
+}
+
+/* ====== REFERENCE TABLES ====== */
+document.getElementById('regions-body').innerHTML=REGIONS.map(function(r){return'<tr><td>'+r.n+'</td><td>'+r.c+'</td><td>'+r.a+'</td><td>'+r.p+'</td></tr>';}).join('');
+document.getElementById('limits-body').innerHTML=LIMITS.map(function(l){return'<tr><td>'+l.r+'</td><td>'+l.d+'</td><td>'+l.m+'</td><td>'+l.n+'</td></tr>';}).join('');
+var allPorts=PORTS.slice();
+function renderPorts(){document.getElementById('ports-body').innerHTML=allPorts.map(function(p){return'<tr><td>'+p.p+'</td><td>'+p.pr+'</td><td>'+p.s+'</td><td>'+p.r+'</td></tr>';}).join('');}
+function filterPorts(){var q=document.getElementById('port-search').value.toLowerCase();allPorts=q?PORTS.filter(function(p){return(p.p+p.s+p.r).toLowerCase().indexOf(q)>=0;}):PORTS.slice();renderPorts();}
+renderPorts();
+
+/* ====== FEATURED GRID ====== */
+var FEAT=[
+  {t:'cloudcompare',i:'🔀',n:'Cloud Service Mapper',tg:'az',tl:'Multi-Cloud',d:'Map any service concept to its Azure, AWS, and GCP equivalent instantly.'},
+  {t:'cidrinfo',i:'📐',n:'CIDR Calculator',tg:'net',tl:'Networking',d:'Network address, broadcast, usable hosts, and cloud reservations from any CIDR.'},
+  {t:'naming',i:'📛',n:'Cloud Resource Naming',tg:'az',tl:'Azure / AWS / GCP',d:'Generate resource names following conventions for all three major clouds.'},
+  {t:'tfbackend',i:'🗄️',n:'Terraform Remote Backend',tg:'iac',tl:'IaC',d:'Configure Terraform state in Azure Blob, AWS S3, or GCP Cloud Storage.'},
+  {t:'nsg',i:'🛡️',n:'Firewall Rule Builder',tg:'net',tl:'Multi-Cloud',d:'Build NSG, Security Group, or GCP Firewall rules and export as IaC or CLI.'},
+  {t:'k8smanifest',i:'⎈',n:'K8s Deployment Manifest',tg:'k8s',tl:'K8s',d:'Production Kubernetes YAML with resource limits, probes, and security context.'},
+  {t:'bashsnippets',i:'🐚',n:'Bash Cloud Snippets',tg:'bash',tl:'Bash',d:'Ready-to-use Bash scripts for Azure, AWS, and GCP automation tasks.'},
+  {t:'clicompare',i:'⌨️',n:'CLI Command Cheat Sheet',tg:'az',tl:'az / aws / gcloud',d:'Equivalent az, aws, and gcloud commands for the most common operations.'},
+];
+
+var fg=document.getElementById('featured-grid');
+FEAT.forEach(function(f){
+  var tagClass='tag-'+f.tg;
+  fg.innerHTML+='<div class="tool-card" data-tool="'+f.t+'"><div class="tool-header"><div class="tool-icon">'+f.i+'</div><div><div class="tool-name">'+f.n+'</div><div class="tags"><span class="tag '+tagClass+'">'+f.tl+'</span></div></div></div><p class="tool-desc">'+f.d+'</p><div class="card-cta">Open tool <span class="cta-arrow">&#x2192;</span></div><div class="tool-panel" id="fp-'+f.t+'"></div></div>';
+});
+buildFeaturedPanels();
+
+/* ====== FEATURED PANELS ====== */
+/* Each featured card gets its own embedded panel injected at load time.
+   IDs are prefixed fp- to avoid conflicts with section panels. */
+function buildFeaturedPanels(){
+  var defs={
+    cloudcompare:{
+      html:function(){
+        return '<div class="panel-title">multi-cloud / service-mapper</div>'
+          +'<div class="field"><label>Filter by Category</label>'
+          +'<select id="fp-cc-cat" onchange="fpRenderCC()">'
+          +'<option value="all">All Categories</option>'
+          +'<option value="compute">Compute</option>'
+          +'<option value="storage">Storage</option>'
+          +'<option value="database">Database</option>'
+          +'<option value="networking">Networking</option>'
+          +'<option value="iam">IAM &amp; Security</option>'
+          +'<option value="containers">Containers &amp; K8s</option>'
+          +'<option value="serverless">Serverless</option>'
+          +'<option value="monitoring">Monitoring</option>'
+          +'<option value="cicd">CI/CD</option>'
+          +'</select></div>'
+          +'<div style="overflow-x:auto"><table class="cmp-table">'
+          +'<thead><tr><th>Concept</th><th>Azure</th><th>AWS</th><th>GCP</th></tr></thead>'
+          +'<tbody id="fp-cc-body"></tbody></table></div>';
+      },
+      init:function(){fpRenderCC();}
+    },
+    cidrinfo:{
+      html:function(){
+        return '<div class="panel-title">networking / cidr-calculator</div>'
+          +'<div class="field"><label>CIDR Block</label><input id="fp-cidr-input" type="text" value="10.10.0.0/22"/></div>'
+          +'<div class="btn-row"><button class="btn btn-primary" onclick="fpCalcCidr()">Calculate</button>'
+          +'<button class="btn btn-ghost" onclick="copyOut(\'fp-output-cidrinfo\')">Copy</button></div>'
+          +'<div class="stats-row" id="fp-cidr-stats" style="display:none"></div>'
+          +'<div class="output" id="fp-output-cidrinfo"></div>';
+      },init:function(){}
+    },
+    naming:{
+      html:function(){
+        return '<div class="panel-title">naming / resource-naming-generator</div>'
+          +'<div class="cloud-tabs">'
+          +'<button class="ctab active-az" onclick="fpSwitchNaming(\'az\',this)">Azure (CAF)</button>'
+          +'<button class="ctab" onclick="fpSwitchNaming(\'aws\',this)">AWS</button>'
+          +'<button class="ctab" onclick="fpSwitchNaming(\'gcp\',this)">GCP</button>'
+          +'</div>'
+          +'<div class="cloud-pane visible" id="fp-naming-az">'
+          +'<div class="field-row">'
+          +'<div class="field"><label>Type</label><select id="fp-naming-type">'
+          +'<option value="rg">Resource Group</option><option value="vnet">VNet</option>'
+          +'<option value="st">Storage Account</option><option value="kv">Key Vault</option>'
+          +'<option value="aks">AKS Cluster</option><option value="vm">Virtual Machine</option>'
+          +'</select></div>'
+          +'<div class="field"><label>Env</label><select id="fp-naming-env"><option>prod</option><option>dev</option><option>stg</option></select></div>'
+          +'</div>'
+          +'<div class="field-row">'
+          +'<div class="field"><label>Workload</label><input id="fp-naming-wl" type="text" value="financeapi"/></div>'
+          +'<div class="field"><label>Region</label><select id="fp-naming-reg"><option value="uks">uks</option><option value="neu">neu</option><option value="eus">eus</option></select></div>'
+          +'</div>'
+          +'<div class="field"><label>Instance</label><input id="fp-naming-inst" type="text" value="001"/></div>'
+          +'<div class="btn-row"><button class="btn btn-az" onclick="fpGenAzName()">Generate Azure Name</button>'
+          +'<button class="btn btn-ghost" onclick="copyOut(\'fp-output-naming\')">Copy</button></div>'
+          +'</div>'
+          +'<div class="cloud-pane" id="fp-naming-aws">'
+          +'<div class="field-row">'
+          +'<div class="field"><label>Type</label><select id="fp-aws-type"><option value="vpc">VPC</option><option value="subnet">Subnet</option><option value="sg">Security Group</option><option value="ec2">EC2</option><option value="s3">S3 Bucket</option><option value="eks">EKS</option><option value="iam-role">IAM Role</option></select></div>'
+          +'<div class="field"><label>Env</label><select id="fp-aws-env"><option>prod</option><option>dev</option><option>staging</option></select></div>'
+          +'</div>'
+          +'<div class="field-row">'
+          +'<div class="field"><label>App</label><input id="fp-aws-app" type="text" value="payments"/></div>'
+          +'<div class="field"><label>Region</label><select id="fp-aws-reg"><option value="euw2">euw2 (eu-west-2)</option><option value="use1">use1 (us-east-1)</option></select></div>'
+          +'</div>'
+          +'<div class="btn-row"><button class="btn btn-aws" onclick="fpGenAwsName()">Generate AWS Name</button>'
+          +'<button class="btn btn-ghost" onclick="copyOut(\'fp-output-naming\')">Copy</button></div>'
+          +'</div>'
+          +'<div class="cloud-pane" id="fp-naming-gcp">'
+          +'<div class="field-row">'
+          +'<div class="field"><label>Type</label><select id="fp-gcp-type"><option value="vpc">VPC Network</option><option value="subnet">Subnetwork</option><option value="gke">GKE Cluster</option><option value="gce">Compute Instance</option><option value="gcs">Cloud Storage</option><option value="sa">Service Account</option></select></div>'
+          +'<div class="field"><label>Env</label><select id="fp-gcp-env"><option>prod</option><option>dev</option><option>staging</option></select></div>'
+          +'</div>'
+          +'<div class="field-row">'
+          +'<div class="field"><label>App</label><input id="fp-gcp-app" type="text" value="payments"/></div>'
+          +'<div class="field"><label>Region</label><select id="fp-gcp-reg"><option value="euw2">euw2 (europe-west2)</option><option value="use1">use1 (us-east1)</option></select></div>'
+          +'</div>'
+          +'<div class="btn-row"><button class="btn btn-gcp" onclick="fpGenGcpName()">Generate GCP Name</button>'
+          +'<button class="btn btn-ghost" onclick="copyOut(\'fp-output-naming\')">Copy</button></div>'
+          +'</div>'
+          +'<div class="output" id="fp-output-naming"></div>';
+      },init:function(){}
+    },
+    tfbackend:{
+      html:function(){
+        return '<div class="panel-title">iac / terraform-remote-backend</div>'
+          +'<div class="cloud-tabs">'
+          +'<button class="ctab active-az" onclick="fpSwitchBackend(\'az\',this)">Azure Blob</button>'
+          +'<button class="ctab" onclick="fpSwitchBackend(\'aws\',this)">AWS S3</button>'
+          +'<button class="ctab" onclick="fpSwitchBackend(\'gcp\',this)">GCP GCS</button>'
+          +'</div>'
+          +'<div class="cloud-pane visible" id="fp-backend-az">'
+          +'<div class="field-row"><div class="field"><label>Storage Account</label><input id="fp-tfb-st" type="text" value="sttfstateprod001"/></div><div class="field"><label>Container</label><input id="fp-tfb-con" type="text" value="tfstate"/></div></div>'
+          +'<div class="field-row"><div class="field"><label>Resource Group</label><input id="fp-tfb-rg" type="text" value="rg-terraform-prod-uks-001"/></div><div class="field"><label>State Key</label><input id="fp-tfb-key" type="text" value="prod.terraform.tfstate"/></div></div>'
+          +'</div>'
+          +'<div class="cloud-pane" id="fp-backend-aws">'
+          +'<div class="field-row"><div class="field"><label>S3 Bucket</label><input id="fp-tfb-bk" type="text" value="my-terraform-state-prod"/></div><div class="field"><label>State Key</label><input id="fp-tfb-s3key" type="text" value="prod/terraform.tfstate"/></div></div>'
+          +'<div class="field-row"><div class="field"><label>Region</label><input id="fp-tfb-awsreg" type="text" value="eu-west-2"/></div><div class="field"><label>DynamoDB Table</label><input id="fp-tfb-dyn" type="text" value="terraform-state-lock"/></div></div>'
+          +'</div>'
+          +'<div class="cloud-pane" id="fp-backend-gcp">'
+          +'<div class="field-row"><div class="field"><label>GCS Bucket</label><input id="fp-tfb-gbk" type="text" value="my-tf-state-prod"/></div><div class="field"><label>Prefix</label><input id="fp-tfb-gpfx" type="text" value="prod"/></div></div>'
+          +'<div class="field"><label>GCP Project ID</label><input id="fp-tfb-gproj" type="text" value="my-project-id"/></div>'
+          +'</div>'
+          +'<div class="btn-row"><button class="btn btn-primary" onclick="fpGenBackend()">Generate Config</button>'
+          +'<button class="btn btn-ghost" onclick="copyOut(\'fp-output-tfbackend\')">Copy</button></div>'
+          +'<div class="output" id="fp-output-tfbackend"></div>';
+      },init:function(){fpCurrentBackend='az';}
+    },
+    nsg:{
+      html:function(){
+        return '<div class="panel-title">networking / firewall-rule-builder</div>'
+          +'<div class="field-row"><div class="field"><label>Rule Name</label><input id="fp-nsg-name" type="text" value="allow-https-inbound"/></div><div class="field"><label>Priority</label><input id="fp-nsg-pri" type="number" value="200"/></div></div>'
+          +'<div class="field-row"><div class="field"><label>Direction</label><select id="fp-nsg-dir"><option>Inbound</option><option>Outbound</option></select></div><div class="field"><label>Action</label><select id="fp-nsg-acc"><option>Allow</option><option>Deny</option></select></div></div>'
+          +'<div class="field-row"><div class="field"><label>Protocol</label><select id="fp-nsg-proto"><option>tcp</option><option>udp</option><option>icmp</option><option>all</option></select></div><div class="field"><label>Port</label><input id="fp-nsg-port" type="text" value="443"/></div></div>'
+          +'<div class="field-row"><div class="field"><label>Source CIDR</label><input id="fp-nsg-src" type="text" value="0.0.0.0/0"/></div><div class="field"><label>Format</label><select id="fp-nsg-fmt"><option value="bicep">Bicep (Azure)</option><option value="terraform">Terraform HCL</option><option value="awscli">AWS CLI</option><option value="gcpcli">gcloud CLI</option><option value="arm">ARM JSON</option></select></div></div>'
+          +'<div class="btn-row"><button class="btn btn-primary" onclick="fpBuildNsg()">Generate Rule</button>'
+          +'<button class="btn btn-ghost" onclick="copyOut(\'fp-output-nsg\')">Copy</button></div>'
+          +'<div class="output" id="fp-output-nsg"></div>';
+      },init:function(){}
+    },
+    k8smanifest:{
+      html:function(){
+        return '<div class="panel-title">k8s / deployment-manifest-generator</div>'
+          +'<div class="field-row"><div class="field"><label>App Name</label><input id="fp-k8s-name" type="text" value="payments-api"/></div><div class="field"><label>Namespace</label><input id="fp-k8s-ns" type="text" value="default"/></div></div>'
+          +'<div class="field-row"><div class="field"><label>Container Image</label><input id="fp-k8s-img" type="text" value="registry.example.com/app:latest"/></div><div class="field"><label>Port</label><input id="fp-k8s-port" type="number" value="8080"/></div></div>'
+          +'<div class="field-row"><div class="field"><label>Replicas</label><input id="fp-k8s-rep" type="number" value="3" min="1"/></div><div class="field"><label>CPU Req / Limit</label><input id="fp-k8s-cpu" type="text" value="250m / 500m"/></div></div>'
+          +'<div class="field"><label>Memory Req / Limit</label><input id="fp-k8s-mem" type="text" value="256Mi / 512Mi"/></div>'
+          +'<div class="btn-row"><button class="btn btn-primary" onclick="fpGenManifest()">Generate YAML</button>'
+          +'<button class="btn btn-ghost" onclick="copyOut(\'fp-output-k8s\')">Copy</button></div>'
+          +'<div class="output" id="fp-output-k8s"></div>';
+      },init:function(){}
+    },
+    bashsnippets:{
+      html:function(){
+        return '<div class="panel-title">scripting / bash-cloud-snippets</div>'
+          +'<div class="field-row"><div class="field"><label>Cloud</label><select id="fp-bash-cloud"><option value="az">Azure (az cli)</option><option value="aws">AWS (aws cli)</option><option value="gcp">GCP (gcloud)</option></select></div>'
+          +'<div class="field"><label>Task</label><select id="fp-bash-task"><option value="login">Login / Auth setup</option><option value="list-resources">List resources</option><option value="create-rg">Create VPC / Resource Group</option><option value="deploy-vm">Deploy VM / instance</option><option value="storage-ops">Storage operations</option><option value="k8s-creds">Get K8s credentials</option><option value="cost-check">Check billing / spend</option><option value="cleanup">Delete / cleanup</option></select></div></div>'
+          +'<div class="btn-row"><button class="btn btn-primary" onclick="fpGetBash()">Get Snippet</button>'
+          +'<button class="btn btn-ghost" onclick="copyOut(\'fp-output-bash\')">Copy</button></div>'
+          +'<div class="output" id="fp-output-bash"></div>';
+      },init:function(){}
+    },
+    clicompare:{
+      html:function(){
+        return '<div class="panel-title">multi-cloud / cli-cheat-sheet</div>'
+          +'<div class="field"><label>Filter</label><input id="fp-cli-search" type="text" placeholder="vm, bucket, login, list..." oninput="fpRenderCli()"/></div>'
+          +'<div style="overflow-x:auto"><table class="cmp-table"><thead><tr><th>Operation</th><th>az</th><th>aws</th><th>gcloud</th></tr></thead><tbody id="fp-cli-body"></tbody></table></div>';
+      },
+      init:function(){fpRenderCli();}
+    }
+  };
+
+  /* Inject panels and wire up close button */
+  FEAT.forEach(function(f){
+    var def=defs[f.t];
+    if(!def)return;
+    var panel=document.getElementById('fp-'+f.t);
+    if(!panel)return;
+    panel.innerHTML='<button class="panel-close" onclick="fpClose(\''+f.t+'\')">X</button>'+def.html();
+    def.init();
+  });
+
+  /* Override the featured-grid click handler to use fp- panels */
+  document.getElementById('featured-grid').addEventListener('click',function(e){
+    var card=e.target.closest('.tool-card');
+    if(!card)return;
+    var tag=e.target.tagName;
+    if(e.target.closest('.tool-panel')||tag==='BUTTON'||tag==='INPUT'||tag==='SELECT'||tag==='TEXTAREA'||tag==='LABEL')return;
+    var tool=card.dataset.tool;
+    if(!tool)return;
+    var panel=document.getElementById('fp-'+tool);
+    if(!panel)return;
+    /* Close any other open featured panel */
+    document.querySelectorAll('#featured-grid .tool-panel.open').forEach(function(p){
+      if(p!==panel)p.classList.remove('open');
+    });
+    panel.classList.toggle('open');
+    if(panel.classList.contains('open'))setTimeout(function(){panel.scrollIntoView({behavior:'smooth',block:'nearest'});},60);
+    e.stopPropagation();
+  },true);
+}
+
+function fpClose(id){
+  var p=document.getElementById('fp-'+id);if(p)p.classList.remove('open');
+}
+
+/* -- Featured-specific switchers -- */
+var fpCurrentBackend='az';
+var fpCurrentNaming='az';
+
+function fpSwitchNaming(c,btn){
+  ['az','aws','gcp'].forEach(function(x){
+    var el=document.getElementById('fp-naming-'+x);if(el)el.classList.toggle('visible',x===c);
+  });
+  btn.parentElement.querySelectorAll('.ctab').forEach(function(b){b.className='ctab';});
+  btn.classList.add('active-'+c);
+  fpCurrentNaming=c;
+}
+function fpSwitchBackend(c,btn){
+  ['az','aws','gcp'].forEach(function(x){
+    var el=document.getElementById('fp-backend-'+x);if(el)el.classList.toggle('visible',x===c);
+  });
+  btn.parentElement.querySelectorAll('.ctab').forEach(function(b){b.className='ctab';});
+  btn.classList.add('active-'+c);
+  fpCurrentBackend=c;
+}
+
+/* -- Featured tool functions -- */
+function fpRenderCC(){
+  var cat=document.getElementById('fp-cc-cat').value;
+  var data=cat==='all'?CLOUD_SERVICES:CLOUD_SERVICES.filter(function(r){return r.cat===cat;});
+  document.getElementById('fp-cc-body').innerHTML=data.map(function(r){
+    return '<tr><td>'+r.concept+'</td><td>'+r.az+'</td><td>'+r.aws+'</td><td>'+r.gcp+'</td></tr>';
+  }).join('');
+}
+
+function fpCalcCidr(){
+  var inp=document.getElementById('fp-cidr-input').value.trim();
+  var p;try{p=parseC(inp);}catch(e){show('fp-output-cidrinfo','Invalid CIDR block.');return;}
+  var bc=(p.net|~p.mask)>>>0;var first=(p.net+1)>>>0;var last=(bc-1)>>>0;
+  var total=Math.pow(2,32-p.prefix);var usable=Math.max(0,total-2);
+  var ss=document.getElementById('fp-cidr-stats');
+  ss.style.display='grid';
+  ss.innerHTML='<div class="stat-card"><div class="stat-lbl">Network</div><div class="stat-val" style="font-size:12px">'+l2i(p.net)+'</div></div>'
+    +'<div class="stat-card"><div class="stat-lbl">Broadcast</div><div class="stat-val" style="font-size:12px">'+l2i(bc)+'</div></div>'
+    +'<div class="stat-card"><div class="stat-lbl">Usable</div><div class="stat-val">'+usable.toLocaleString()+'</div></div>'
+    +'<div class="stat-card"><div class="stat-lbl">Mask</div><div class="stat-val" style="font-size:12px">'+l2i(p.mask)+'</div></div>';
+  show('fp-output-cidrinfo','Network:       '+l2i(p.net)+'\nBroadcast:     '+l2i(bc)+'\nSubnet Mask:   '+l2i(p.mask)+'\nPrefix:        /'+p.prefix+'\nFirst Usable:  '+l2i(first)+'\nLast Usable:   '+l2i(last)+'\nTotal IPs:     '+total.toLocaleString()+'\nUsable Hosts:  '+usable.toLocaleString()+'\nAzure Usable:  '+Math.max(0,usable-3).toLocaleString()+'\nAWS Usable:    '+Math.max(0,usable-4).toLocaleString());
+}
+
+var NP_FP={rg:'rg-',vnet:'vnet-',st:'st',kv:'kv-',aks:'aks-',vm:'vm'};
+var NMAX_FP={st:24,vm:15,kv:24};
+
+function fpGenAzName(){
+  var type=document.getElementById('fp-naming-type').value;
+  var env=document.getElementById('fp-naming-env').value;
+  var wl=document.getElementById('fp-naming-wl').value.toLowerCase().replace(/[^a-z0-9]/g,'');
+  var reg=document.getElementById('fp-naming-reg').value;
+  var inst=document.getElementById('fp-naming-inst').value;
+  var prefix=NP_FP[type]||type+'-';
+  var parts=[env,wl,reg,inst];
+  var name=['st'].indexOf(type)>=0?prefix+parts.join(''):prefix+parts.join('-');
+  var max=NMAX_FP[type];
+  if(max&&name.length>max)name=name.substring(0,max);
+  show('fp-output-naming','[Azure CAF]\nName:   '+name+'\nLength: '+name.length+' chars'+(max?' (max '+max+')':'')+'\nPattern: <prefix>-<env>-<workload>-<region>-<instance>');
+}
+function fpGenAwsName(){
+  var type=document.getElementById('fp-aws-type').value;
+  var env=document.getElementById('fp-aws-env').value;
+  var app=document.getElementById('fp-aws-app').value.toLowerCase().replace(/[^a-z0-9]/g,'');
+  var reg=document.getElementById('fp-aws-reg').value;
+  var pre={vpc:'vpc',subnet:'sn',sg:'sg',ec2:'ec2',s3:'',eks:'eks','iam-role':'role'};
+  var p=pre[type]||type;
+  show('fp-output-naming','[AWS Convention]\nName:   '+(p?p+'-'+env+'-'+app+'-'+reg:app+'-'+env+'-'+reg)+'\nPattern: <type>-<env>-<app>-<region>');
+}
+function fpGenGcpName(){
+  var type=document.getElementById('fp-gcp-type').value;
+  var env=document.getElementById('fp-gcp-env').value;
+  var app=document.getElementById('fp-gcp-app').value.toLowerCase().replace(/[^a-z0-9]/g,'');
+  var reg=document.getElementById('fp-gcp-reg').value;
+  var pre={vpc:'vpc',subnet:'sn',gke:'gke',gce:'vm',gcs:'',sa:'sa'};
+  var p=pre[type]||type;
+  show('fp-output-naming','[GCP Convention]\nName:   '+(p?p+'-'+app+'-'+env+'-'+reg:app+'-'+env+'-'+reg)+'\nPattern: <type>-<app>-<env>-<region>');
+}
+
+function fpGenBackend(){
+  var cl=fpCurrentBackend;var out='';
+  if(cl==='az'){
+    var st=document.getElementById('fp-tfb-st').value;
+    var con=document.getElementById('fp-tfb-con').value;
+    var rg=document.getElementById('fp-tfb-rg').value;
+    var key=document.getElementById('fp-tfb-key').value;
+    out='# backend.tf - Azure Blob Storage\nterraform {\n  backend "azurerm" {\n    resource_group_name  = "'+rg+'"\n    storage_account_name = "'+st+'"\n    container_name       = "'+con+'"\n    key                  = "'+key+'"\n    use_oidc             = true\n  }\n}\n\n# Provision once:\n# az group create -n '+rg+' -l uksouth\n# az storage account create -n '+st+' -g '+rg+' --sku Standard_ZRS --min-tls-version TLS1_2\n# az storage container create -n '+con+' --account-name '+st;
+  }else if(cl==='aws'){
+    var bk=document.getElementById('fp-tfb-bk').value;
+    var s3k=document.getElementById('fp-tfb-s3key').value;
+    var reg=document.getElementById('fp-tfb-awsreg').value;
+    var dyn=document.getElementById('fp-tfb-dyn').value;
+    out='# backend.tf - AWS S3 + DynamoDB\nterraform {\n  backend "s3" {\n    bucket         = "'+bk+'"\n    key            = "'+s3k+'"\n    region         = "'+reg+'"\n    encrypt        = true\n    dynamodb_table = "'+dyn+'"\n  }\n}\n\n# Provision once:\n# aws s3api create-bucket --bucket '+bk+' --region '+reg+' --create-bucket-configuration LocationConstraint='+reg+'\n# aws s3api put-bucket-versioning --bucket '+bk+' --versioning-configuration Status=Enabled\n# aws dynamodb create-table --table-name '+dyn+' --attribute-definitions AttributeName=LockID,AttributeType=S --key-schema AttributeName=LockID,KeyType=HASH --billing-mode PAY_PER_REQUEST';
+  }else{
+    var gbk=document.getElementById('fp-tfb-gbk').value;
+    var gpfx=document.getElementById('fp-tfb-gpfx').value;
+    var gproj=document.getElementById('fp-tfb-gproj').value;
+    out='# backend.tf - GCP Cloud Storage\nterraform {\n  backend "gcs" {\n    bucket = "'+gbk+'"\n    prefix = "'+gpfx+'"\n  }\n}\n\n# Provision once:\n# gcloud storage buckets create gs://'+gbk+' --project='+gproj+' --location=EUROPE-WEST2\n# gcloud storage buckets update gs://'+gbk+' --versioning';
+  }
+  show('fp-output-tfbackend',out);
+}
+
+function fpBuildNsg(){
+  var name=document.getElementById('fp-nsg-name').value;
+  var pri=document.getElementById('fp-nsg-pri').value;
+  var dir=document.getElementById('fp-nsg-dir').value;
+  var acc=document.getElementById('fp-nsg-acc').value;
+  var prt=document.getElementById('fp-nsg-proto').value;
+  var port=document.getElementById('fp-nsg-port').value;
+  var src=document.getElementById('fp-nsg-src').value;
+  var fmt=document.getElementById('fp-nsg-fmt').value;
+  var out='';
+  if(fmt==='bicep'){out="// Azure NSG Rule - Bicep\n{\n  name: '"+name+"'\n  properties: {\n    priority:                  "+pri+"\n    direction:                 '"+dir+"'\n    access:                    '"+acc+"'\n    protocol:                  '"+prt+"'\n    sourcePortRange:           '*'\n    destinationPortRange:      '"+port+"'\n    sourceAddressPrefix:       '"+src+"'\n  }\n}";}
+  else if(fmt==='arm'){out='// Azure NSG Rule - ARM JSON\n{\n  "name": "'+name+'",\n  "properties": {\n    "priority": '+pri+',\n    "direction": "'+dir+'",\n    "access": "'+acc+'",\n    "protocol": "'+prt+'",\n    "destinationPortRange": "'+port+'",\n    "sourceAddressPrefix": "'+src+'"\n  }\n}';}
+  else if(fmt==='terraform'){out='// Terraform HCL\nresource "azurerm_network_security_rule" "'+name+'" {\n  name                       = "'+name+'"\n  priority                   = '+pri+'\n  direction                  = "'+dir+'"\n  access                     = "'+acc+'"\n  protocol                   = "'+prt+'"\n  destination_port_range     = "'+port+'"\n  source_address_prefix      = "'+src+'"\n  destination_address_prefix = "*"\n}\n\n# AWS equivalent\nresource "aws_security_group_rule" "'+name+'" {\n  type        = "'+(dir==='Inbound'?'ingress':'egress')+'"\n  from_port   = '+port+'\n  to_port     = '+port+'\n  protocol    = "'+prt+'"\n  cidr_blocks = ["'+src+'"]\n}\n\n# GCP equivalent\nresource "google_compute_firewall" "'+name+'" {\n  name      = "'+name+'"\n  network   = "default"\n  direction = "'+(dir==='Inbound'?'INGRESS':'EGRESS')+'"\n  allow { protocol = "'+prt+'"; ports = ["'+port+'"] }\n  source_ranges = ["'+src+'"]\n}';}
+  else if(fmt==='awscli'){out='# AWS CLI - Security Group Rule\naws ec2 authorize-security-group-'+(dir==='Inbound'?'ingress':'egress')+' \\\n  --group-id sg-xxxxxxxxxxxxxxxxx \\\n  --protocol '+prt+' \\\n  --port '+port+' \\\n  --cidr '+src;}
+  else if(fmt==='gcpcli'){out='# GCP - Cloud Firewall Rule\ngcloud compute firewall-rules create '+name+' \\\n  --direction '+(dir==='Inbound'?'INGRESS':'EGRESS')+' \\\n  --action '+(acc==='Allow'?'ALLOW':'DENY')+' \\\n  --rules '+prt+':'+port+' \\\n  --source-ranges '+src+' \\\n  --priority '+pri;}
+  show('fp-output-nsg',out);
+}
+
+function fpGenManifest(){
+  var name=document.getElementById('fp-k8s-name').value;
+  var ns=document.getElementById('fp-k8s-ns').value;
+  var img=document.getElementById('fp-k8s-img').value;
+  var port=document.getElementById('fp-k8s-port').value;
+  var rep=document.getElementById('fp-k8s-rep').value;
+  var cpuP=(document.getElementById('fp-k8s-cpu').value||'250m/500m').split('/');
+  var memP=(document.getElementById('fp-k8s-mem').value||'256Mi/512Mi').split('/');
+  var cReq=cpuP[0].trim();var cLim=(cpuP[1]||cpuP[0]).trim();
+  var mReq=memP[0].trim();var mLim=(memP[1]||memP[0]).trim();
+  show('fp-output-k8s','apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: '+name+'\n  namespace: '+ns+'\nspec:\n  replicas: '+rep+'\n  selector:\n    matchLabels:\n      app: '+name+'\n  strategy:\n    type: RollingUpdate\n    rollingUpdate: { maxSurge: 1, maxUnavailable: 0 }\n  template:\n    metadata:\n      labels:\n        app: '+name+'\n    spec:\n      containers:\n      - name: '+name+'\n        image: '+img+'\n        ports:\n        - containerPort: '+port+'\n        resources:\n          requests: { cpu: '+cReq+', memory: '+mReq+' }\n          limits:   { cpu: '+cLim+', memory: '+mLim+' }\n        readinessProbe:\n          httpGet: { path: /health, port: '+port+' }\n          initialDelaySeconds: 10\n          periodSeconds: 5\n        livenessProbe:\n          httpGet: { path: /health, port: '+port+' }\n          initialDelaySeconds: 30\n          periodSeconds: 10\n        securityContext:\n          runAsNonRoot: true\n          readOnlyRootFilesystem: true\n          allowPrivilegeEscalation: false\n      securityContext: { runAsUser: 1000, fsGroup: 2000 }\n      terminationGracePeriodSeconds: 30');
+}
+
+function fpGetBash(){
+  var cloud=document.getElementById('fp-bash-cloud').value;
+  var task=document.getElementById('fp-bash-task').value;
+  var snippet=(BASH_SNIPPETS[cloud]||{})[task]||'# Snippet not available for this combination.';
+  show('fp-output-bash',snippet);
+}
+
+function fpRenderCli(){
+  var q=(document.getElementById('fp-cli-search')||{value:''}).value.toLowerCase();
+  var data=q?CLI_DATA.filter(function(r){return(r.op+r.az+r.aws+r.gcp).toLowerCase().indexOf(q)>=0;}):CLI_DATA;
+  document.getElementById('fp-cli-body').innerHTML=data.map(function(r){
+    return '<tr><td>'+r.op+'</td><td>'+r.az+'</td><td>'+r.aws+'</td><td>'+r.gcp+'</td></tr>';
+  }).join('');
+}
+
+</script>
+</body>
+</html>
